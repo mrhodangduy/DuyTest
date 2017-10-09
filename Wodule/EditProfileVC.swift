@@ -46,11 +46,14 @@ class EditProfileVC: UIViewController {
     var dataCurrentSelected:Array<String>!
     let datePicker = UIDatePicker()
     
-    var userInfo:UserInfoAPI!
+    var userInfo:NSDictionary!
     var para: Parameters!
     var header: HTTPHeaders!
     var imgData:Data?
     let token = userDefault.object(forKey: TOKEN_STRING) as! String
+    
+    var socialAvatar:URL!
+    var socialIdentifier:String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,38 +65,68 @@ class EditProfileVC: UIViewController {
         
         showDatePicker()
         
-        lbb_Type.text = "Type: " + userInfo.type.uppercased()
-        img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo.picture), placeholderImage: nil, options: [], progress: nil, completed: nil)
+        lbb_Type.text = "Type: " + (userInfo["type"] as! String).uppercased()
+        
+        
+        if userInfo["picture"] as! String == "http://wodule.io/user/default.jpg"
+        {
+            img_Avatar.sd_setImageWithPreviousCachedImage(with: socialAvatar, placeholderImage: nil, options: [], progress: nil, completed: nil)
+        }
+        else
+        {
+            img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo["picture"] as! String), placeholderImage: nil, options: [], progress: nil, completed: nil)
+        }
+        
+        switch socialIdentifier {
+            
+        case GOOGLELOGIN, FACEBOOKLOGIN:
+            
+            if userInfo["picture"] as! String == "http://wodule.io/user/default.jpg"
+            {
+                img_Avatar.sd_setImageWithPreviousCachedImage(with: socialAvatar, placeholderImage: nil, options: [], progress: nil, completed: nil)
+            }
+            else
+            {
+                img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo["picture"] as! String), placeholderImage: nil, options: [], progress: nil, completed: nil)
+            }
+        
+        case INSTAGRAMLOGIN:
+            return
+            
+        default:
+            
+            img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo["picture"] as! String), placeholderImage: nil, options: [], progress: nil, completed: nil)
+        }
+
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleGetImage))
         img_Avatar.addGestureRecognizer(tapGesture)
         
-        tf_UserName.text = userInfo.user_name
+        tf_UserName.text = userInfo["user_name"] as? String ?? ""
         tf_Password.text = "123456"
-        tf_Firstname.text = userInfo.first_name
-        tf_Middlename.text = userInfo.middle_name
-        tf_Lastname.text = userInfo.last_name
-        tf_Nativename.text = userInfo.native_name
-        tf_Suffix.text = userInfo.suffix
-        tf_DateOfBirth.text = userInfo.date_of_birth
-        tf_CountryOfBirth.text = userInfo.country_of_birth
-        tf_Residence.text = userInfo.address
-        tf_City.text = userInfo.city
-        tf_Country.text = userInfo.country
-        tf_Telephone.text = userInfo.telephone
-        tf_Email.text = userInfo.email
-        tf_Nationality.text = userInfo.nationality
-        tf_Ethnicity.text = userInfo.ethnicity
-        tf_Status.text = userInfo.status
-        tf_Religion.text = userInfo.religion
-        tf_Gender.text = userInfo.gender
+        tf_Firstname.text = userInfo["first_name"] as? String ?? ""
+        tf_Middlename.text = userInfo["middle_name"] as? String ?? ""
+        tf_Lastname.text = userInfo["last_name"] as? String ?? ""
+        tf_Suffix.text = userInfo["suffix"] as? String ?? ""
+        tf_DateOfBirth.text = userInfo["date_of_birth"] as? String ?? ""
+        tf_CountryOfBirth.text = userInfo["country_of_birth"] as? String ?? ""
+        tf_Residence.text = userInfo["address"] as? String ?? ""
+        tf_City.text = userInfo["city"] as? String ?? ""
+        tf_Country.text = userInfo["country"] as? String ?? ""
+        tf_Telephone.text = userInfo["telephone"] as? String ?? ""
+        tf_Email.text = userInfo["email"] as? String ?? ""
+        tf_Nationality.text = userInfo["nationality"] as? String ?? ""
+        tf_Ethnicity.text = userInfo["ethnicity"] as? String ?? ""
+        tf_Status.text = userInfo["status"] as? String ?? ""
+        tf_Religion.text = userInfo["religion"] as? String ?? ""
+        tf_Gender.text = userInfo["gender"] as? String ?? ""
         
-        if userInfo.ln_first == "Yes"
+        if userInfo["ln_first"] as? String == "Yes"
         {
             lastname_first.setImage(#imageLiteral(resourceName: "ic_ticked"), for: .normal)
             isTicked = true
         }
-        else if userInfo.ln_first == nil
+        else if userInfo["ln_first"] as? String == nil
         {
             lastname_first.setImage(#imageLiteral(resourceName: "ic_tick"), for: .normal)
             isTicked = false
@@ -291,11 +324,11 @@ class EditProfileVC: UIViewController {
         para = ["_method":"PATCH"]
         
         
-        if isTicked! && userInfo.ln_first != "Yes"
+        if isTicked! && userInfo["ln_first"] as? String != "Yes"
         {
             para.updateValue("Yes", forKey: "ln_first")
         }
-        else if isTicked! == false && userInfo.ln_first == "Yes"
+        else if isTicked! == false && userInfo["ln_first"] as? String == "Yes"
         {
             para.updateValue("No", forKey: "ln_first")
 
@@ -304,67 +337,67 @@ class EditProfileVC: UIViewController {
         {
             
         }
-        if (tf_Firstname.text?.characters.count)! > 0 && tf_Firstname.text! != userInfo.first_name
+        if (tf_Firstname.text?.characters.count)! > 0 && tf_Firstname.text! != userInfo["first_name"] as? String
         {
             para.updateValue(tf_Firstname.text!, forKey: "first_name")
         }
-        if (tf_Middlename.text?.characters.count)! > 0 && tf_Middlename.text! != userInfo.middle_name
+        if (tf_Middlename.text?.characters.count)! > 0 && tf_Middlename.text! != userInfo["middle_name"] as? String
         {
             para.updateValue(tf_Middlename.text!, forKey: "middle_name")
         }
-        if (tf_Lastname.text?.characters.count)! > 0 && tf_Lastname.text! != userInfo.last_name
+        if (tf_Lastname.text?.characters.count)! > 0 && tf_Lastname.text! != userInfo["last_name"] as? String
         {
             para.updateValue(tf_Lastname.text!, forKey: "last_name")
         }
-        if (tf_Suffix.text?.characters.count)! > 0 && tf_Suffix.text! != userInfo.suffix
+        if (tf_Suffix.text?.characters.count)! > 0 && tf_Suffix.text! != userInfo["suffix"] as? String
         {
             para.updateValue(tf_Suffix.text!, forKey: "suffix")
         }
-        if (tf_Nativename.text?.characters.count)! > 0 && tf_Nativename.text! != userInfo.native_name
+        if (tf_Nativename.text?.characters.count)! > 0 && tf_Nativename.text! != userInfo["native_name"] as? String
         {
             para.updateValue(tf_Nativename.text!, forKey: "native_name")
         }
-        if (tf_DateOfBirth.text?.characters.count)! > 0 && tf_DateOfBirth.text! != userInfo.date_of_birth
+        if (tf_DateOfBirth.text?.characters.count)! > 0 && tf_DateOfBirth.text! != userInfo["date_of_birth"] as? String
         {
             para.updateValue(tf_DateOfBirth.text!, forKey: "date_of_birth")
         }
-        if (tf_CountryOfBirth.text?.characters.count)! > 0 && tf_CountryOfBirth.text! != userInfo.country_of_birth
+        if (tf_CountryOfBirth.text?.characters.count)! > 0 && tf_CountryOfBirth.text! != userInfo["country_of_birth"] as? String
         {
             para.updateValue(tf_CountryOfBirth.text!, forKey: "country_of_birth")
         }
-        if (tf_Residence.text?.characters.count)! > 0 && tf_Residence.text! != userInfo.address
+        if (tf_Residence.text?.characters.count)! > 0 && tf_Residence.text! != userInfo["address"] as? String
         {
             para.updateValue(tf_Residence.text!, forKey: "address")
         }
-        if (tf_City.text?.characters.count)! > 0 && tf_City.text! != userInfo.city
+        if (tf_City.text?.characters.count)! > 0 && tf_City.text! != userInfo["city"] as? String
         {
             para.updateValue(tf_City.text!, forKey: "city")
         }
-        if (tf_Country.text?.characters.count)! > 0 && tf_Country.text! != userInfo.country
+        if (tf_Country.text?.characters.count)! > 0 && tf_Country.text! != userInfo["country"] as? String
         {
             para.updateValue(tf_Country.text!, forKey: "country")
         }
-        if (tf_Telephone.text?.characters.count)! > 0 && tf_Telephone.text! != userInfo.telephone
+        if (tf_Telephone.text?.characters.count)! > 0 && tf_Telephone.text! != userInfo["telephone"] as? String
         {
             para.updateValue(tf_Telephone.text!, forKey: "telephone")
         }
-        if (tf_Nationality.text?.characters.count)! > 0 && tf_Nationality.text! != userInfo.nationality
+        if (tf_Nationality.text?.characters.count)! > 0 && tf_Nationality.text! != userInfo["nationality"] as? String
         {
             para.updateValue(tf_Nationality.text!, forKey: "nationality")
         }
-        if (tf_Ethnicity.text?.characters.count)! > 0 && tf_Ethnicity.text! != userInfo.ethnicity
+        if (tf_Ethnicity.text?.characters.count)! > 0 && tf_Ethnicity.text! != userInfo["ethnicity"] as? String
         {
             para.updateValue(tf_Ethnicity.text!, forKey: "ethnicity")
         }
-        if (tf_Status.text?.characters.count)! > 0 && tf_Status.text! != userInfo.status
+        if (tf_Status.text?.characters.count)! > 0 && tf_Status.text! != userInfo["status"] as? String
         {
             para.updateValue(tf_Status.text!, forKey: "status")
         }
-        if (tf_Religion.text?.characters.count)! > 0 && tf_Religion.text! != userInfo.religion
+        if (tf_Religion.text?.characters.count)! > 0 && tf_Religion.text! != userInfo["religion"] as? String
         {
             para.updateValue(tf_Religion.text!, forKey: "religion")
         }
-        if (tf_Gender.text?.characters.count)! > 0 && tf_Gender.text! != userInfo.gender
+        if (tf_Gender.text?.characters.count)! > 0 && tf_Gender.text! != userInfo["gender"] as? String
         {
             para.updateValue(tf_Gender.text!, forKey: "gender")
         }
@@ -476,14 +509,15 @@ extension EditProfileVC: UITableViewDelegate, UITableViewDataSource
         switch currentSelected {
         case SUFFIX_STRING:
             tf_Suffix.text = Suffix[indexPath.row]
+            
         case COUNTRYOFBIRTH_STRING:
             tf_CountryOfBirth.text = CountryList[indexPath.row]
             
         case COUNTRY_STRING:
-            tf_Suffix.text = CountryList[indexPath.row]
+            tf_Country.text = CountryList[indexPath.row]
             
         case NATIONALITY_STRING:
-            tf_Suffix.text = Nationality[indexPath.row]
+            tf_Nationality.text = Nationality[indexPath.row]
             
         case ETHNIC_STRING:
             tf_Ethnicity.text = Ethnicity[indexPath.row]

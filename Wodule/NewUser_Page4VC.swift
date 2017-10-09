@@ -146,13 +146,13 @@ class NewUser_Page4VC: UIViewController {
                     self.removeValueObject()
                     let token = userDefault.object(forKey: TOKEN_STRING) as? String
                     
-                    UserInfoAPI.getUserProfile(withToken: token!, completion: { (userInfo) in
+                    UserInfoAPI.getUserInfo(withToken: token!, completion: { (userInfo) in
                         
-                        if userInfo?.type == UserType.assessor.rawValue
+                        if userInfo?["type"] as? String == UserType.assessor.rawValue
                         {
                             let assessor_homeVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "assessor_homeVC") as! Assessor_HomeVC
                             
-                            assessor_homeVC.userInfo = userInfo
+                            assessor_homeVC.userInfomation = userInfo
                             
                             self.navigationController?.pushViewController(assessor_homeVC, animated: true)
                         }
@@ -160,14 +160,14 @@ class NewUser_Page4VC: UIViewController {
                         {
                             let examiner_homeVC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "examiner_homeVC") as! Examiner_HomeVC
                             
-                            examiner_homeVC.userInfo = userInfo
+                            examiner_homeVC.userInfomation = userInfo
                             
                             self.navigationController?.pushViewController(examiner_homeVC, animated: true)
                         }
                         
                         DispatchQueue.main.async(execute: { 
                             self.loadingHide()
-                            print("REGISTER AND LOGIN SUCCESSFUL, REDIRECT TO:-->", userInfo!.type.uppercased())
+                            print("REGISTER AND LOGIN SUCCESSFUL, REDIRECT TO:-->", (userInfo?["type"] as? String)?.uppercased())
                         })
                         
                     })

@@ -9,6 +9,8 @@
 import UIKit
 import SDWebImage
 import SVProgressHUD
+import FBSDKLoginKit
+import FacebookLogin
 
 class Assessor_HomeVC: UIViewController {
     
@@ -22,17 +24,31 @@ class Assessor_HomeVC: UIViewController {
     @IBOutlet weak var img_Avatar: UIImageViewX!
     
     var imageData:Data!
-    var userInfo: UserInfoAPI!
+    var userInfomation:NSDictionary!
+    var socialAvatar: URL!
+    var socialIdentifier: String!
+    
+    
     var CategoryList = [Categories]()
-
+    
     let token = userDefault.object(forKey: TOKEN_STRING) as? String
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if userDefault.object(forKey: SOCIALKEY) as? String != nil
+        {
+            socialIdentifier = userDefault.object(forKey: SOCIALKEY) as! String
+        }
+        else
+        {
+            socialIdentifier = NORMALLOGIN
+        }
+        
+        
         print("\nCURRENT USER TOKEN: ------>\n", token!)
-        print("\nCURRENT USER INFO: ------>\n",userInfo)
-
+        print("\nCURRENT USER INFO: ------>\n",userInfomation)
+        
         asignDataInView()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.logOut))
@@ -45,60 +61,110 @@ class Assessor_HomeVC: UIViewController {
     
     
     func asignDataInView()
-    {
-        lbl_AssessorID.text = "\(userInfo.id)"
-        img_Avatar.sd_setImage(with: URL(string: userInfo.picture), placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
-        let age = calAgeUser(dateString: userInfo.date_of_birth)
-        lbl_Age.text = age
-        lbl_Sex.text = userInfo.gender
-        lbl_ResidenceAdd.text = userInfo.organization
-        lbl_Carier.text = userInfo.student_class
         
-        if userInfo.ln_first == "Yes"
+    {
+        lbl_AssessorID.text = "\((userInfomation["id"] as? Int)!)"
+        lbl_Sex.text = userInfomation["gender"] as? String
+        lbl_ResidenceAdd.text = userInfomation["organization"] as? String
+        lbl_Carier.text = userInfomation["student_class"] as? String
+        
+        print("IDENTIFIER:", socialIdentifier)
+        
+        switch socialIdentifier {
+            
+        case GOOGLELOGIN,FACEBOOKLOGIN:
+            
+            if userInfomation["picture"] as! String == "http://wodule.io/user/default.jpg"
+            {
+                img_Avatar.sd_setImage(with: socialAvatar, placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
+            }
+            else
+            {
+                img_Avatar.sd_setImage(with: URL(string: userInfomation["picture"] as! String), placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
+            }
+        case INSTAGRAMLOGIN:
+            print("INSTAGRAMLOGIN")
+            
+        case NORMALLOGIN:
+            img_Avatar.sd_setImage(with: URL(string: userInfomation["picture"] as! String), placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
+        default:
+            return
+        }
+        
+        
+        if userInfomation["ln_first"] as? String == "Yes"
         {
-            lbl_Name1.text = userInfo.last_name
-            lbl_Name2.text = userInfo.first_name + " " + userInfo.middle_name
+            lbl_Name1.text = userInfomation["last_name"] as? String
+            lbl_Name2.text = userInfomation["first_name"] as? String
         }
         else
         {
-            lbl_Name1.text = userInfo.first_name + " " + userInfo.middle_name
-            lbl_Name2.text = userInfo.last_name
+            lbl_Name1.text = userInfomation["first_name"] as? String
+            lbl_Name2.text = userInfomation["last_name"] as? String
         }
+        
+        if userInfomation["date_of_birth"] as? String != nil
+        {
+            let age = calAgeUser(dateString: (userInfomation["date_of_birth"] as? String)!)
+            lbl_Age.text = age
+        }
+        else
+        {
+            lbl_Age.text = nil
+        }
+        
+        
     }
     
     func loadNewData()
     {
         loadingShow()
-        DispatchQueue.global(qos: .default).async { 
-            UserInfoAPI.getUserProfile(withToken: self.token!, completion: { (users) in
+        DispatchQueue.global(qos: .default).async {
+            UserInfoAPI.getUserInfo(withToken: self.token!, completion: { (users) in
                 
-                self.userInfo = users!
-                DispatchQueue.main.async(execute: { 
+                self.userInfomation = users!
+                DispatchQueue.main.async(execute: {
                     self.asignDataInView()
                     self.loadingHide()
-                    print("\nCURRENT USER INFO AFTER UPDATED: ------>\n",self.userInfo)
-
+                    print("\nCURRENT USER INFO AFTER UPDATED: ------>\n",self.userInfomation)
+                    
                 })
                 
             })
         }
     }
     
-
+    
     
     func logOut()
     {
+        
+        switch socialIdentifier {
+        case GOOGLELOGIN:
+            GIDSignIn.sharedInstance().signOut()
+            print("LogOut G+")
+            
+        case FACEBOOKLOGIN:
+            let manger = FBSDKLoginManager()
+            manger.logOut()
+            print("LogOut FB")
+            
+        default:
+            print("LogOut Normal")
+        }
+        
         self.navigationController?.popToRootViewController(animated: true)
+        userDefault.removeObject(forKey: SOCIALKEY)
+        userDefault.synchronize()
     }
-
+    
     @IBAction func assessmentHistoryTap(_ sender: Any) {
         
         let historyVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "historyVC") as! Assessor_HistoryVC
-        historyVC.userID = userInfo.id
+        historyVC.userID = (userInfomation["id"] as? Int)!
         
         self.navigationController?.pushViewController(historyVC, animated: true)
         
-                
     }
     
     @IBAction func accountingTap(_ sender: Any) {
@@ -107,7 +173,7 @@ class Assessor_HomeVC: UIViewController {
         self.navigationController?.pushViewController(accountingVC, animated: true)
         
     }
-
+    
     @IBAction func calendarTap(_ sender: Any) {
         
         let calendarVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "calendarVC") as! Assessor_CalendarVC
@@ -120,12 +186,15 @@ class Assessor_HomeVC: UIViewController {
         self.navigationController?.pushViewController(part1VC, animated: true)
         
     }
-   
+    
     @IBAction func editProfile(_ sender: Any) {
-
+        
         let editprofileVC = UIStoryboard(name: PROFILE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "editprofileVC") as! EditProfileVC
         
-        editprofileVC.userInfo = self.userInfo
+        editprofileVC.socialAvatar = self.socialAvatar
+        editprofileVC.socialIdentifier = self.socialIdentifier
+        editprofileVC.userInfo = self.userInfomation
+        
         self.navigationController?.pushViewController(editprofileVC, animated: true)
     }
 }

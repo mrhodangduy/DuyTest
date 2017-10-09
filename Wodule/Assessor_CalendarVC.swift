@@ -14,6 +14,14 @@ class Assessor_CalendarVC: UIViewController {
     @IBOutlet weak var calendarView: FSCalendar!
     @IBOutlet weak var calendarHeightConstraint: NSLayoutConstraint!
     
+    fileprivate let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter
+    }()
+    
+    fileprivate let gregorian: NSCalendar! = NSCalendar(calendarIdentifier:NSCalendar.Identifier.gregorian)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,6 +32,22 @@ class Assessor_CalendarVC: UIViewController {
         
         self.navigationController?.popViewController(animated: true)
         
+    }
+    
+    @IBAction func backMonthTap(_ sender: Any) {
+        if  let prePage = self.gregorian.date(byAdding: .month, value: -1, to: calendarView.currentPage, options: .init(rawValue: 0)) {
+            calendarView.setCurrentPage(prePage, animated: true)
+            
+        }
+        
+    }
+    
+    @IBAction func nextMonthTap(_ sender: Any) {
+        
+        if  let nextPage = self.gregorian.date(byAdding: .month, value: 1, to: calendarView.currentPage, options: .init(rawValue: 0)) {
+            calendarView.setCurrentPage(nextPage, animated: true)
+            
+        }
     }
     
 

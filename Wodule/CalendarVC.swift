@@ -23,6 +23,12 @@ class CalendarVC: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func calendarBackTap(_ sender: Any) {
+    }
+    @IBAction func calendaNextTap(_ sender: Any) {
+    }
+    
+    
 
 }
 

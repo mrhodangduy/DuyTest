@@ -12,5 +12,8 @@ target 'Wodule' do
 	pod 'SDWebImage', '~> 4.0'
     pod 'JWGCircleCounter'
     pod 'FSCalendar'
-
+    pod 'Google/SignIn'
+    pod 'FacebookCore'
+    pod 'FacebookLogin'
+    
 end

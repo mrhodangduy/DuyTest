@@ -30,6 +30,13 @@ enum UserType: String
 let timeCoutdown: TimeInterval = 5
 let timeInitial = 4
 
+let SOCIALKEY = "socialKey"
+let GOOGLELOGIN = "u03"
+let FACEBOOKLOGIN = "u01"
+let INSTAGRAMLOGIN = "u02"
+let NORMALLOGIN = "normal"
+
+
 let fontSizeDefaultTV: CGFloat = 17.0
 let COMMENTVIEW_HEIGHT : CGFloat = 36/100
 

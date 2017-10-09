@@ -10,6 +10,196 @@ import Foundation
 import Alamofire
 import SVProgressHUD
 
+
+struct CodeType
+{
+    let id: Int
+    let code : String
+    let tpye : String
+    let organization: String
+    let Class: String
+    let adviser: String
+    
+    enum error:Error {
+        case missing(String)
+    }
+    
+    init(json:[String: AnyObject]) throws
+    {
+        guard let code = json["code"] as? String else { throw error.missing("mising")}
+        guard let tpye = json["type"] as? String else { throw error.missing("mising")}
+        guard let organization = json["organization"] as? String else { throw error.missing("mising")}
+        guard let Class = json["class"] as? String else { throw error.missing("mising")}
+        guard let adviser = json["adviser"] as? String else { throw error.missing("mising")}
+        guard let id = json["id"] as? Int else { throw error.missing("mising")}
+
+        self.id = id
+        self.code = code
+        self.tpye = tpye
+        self.organization = organization
+        self.Class = Class
+        self.adviser = adviser
+    }
+    
+    
+    //    static func getAllCodeInfo(completion: @escaping ([CodeType]?) -> ())
+    //    {
+    //        let url = URL(string: "http://wodule.io/api/code")
+    //
+    //        Alamofire.request(url!, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
+    //
+    //            var result = [CodeType]()
+    //
+    //            if response.response?.statusCode == 200
+    //            {
+    //                let json = response.result.value as? [String: AnyObject]
+    //                if let data = json?["data"] as? [[String:AnyObject]]
+    //                {
+    //                    for item in data
+    //                    {
+    //                        if let code = try? CodeType(json: item)
+    //                        {
+    //                            result.append(code)
+    //                        }
+    //                        else
+    //                        {
+    //                            result = []
+    //                        }
+    //                    }
+    //
+    //                }
+    //                else
+    //                {
+    //                    result = []
+    //                }
+    //            }
+    //            else
+    //            {
+    //                print(response.response!.statusCode)
+    //                result = []
+    //            }
+    //
+    //            completion(result)
+    //        }
+    //    }
+    
+    static func getUniqueCodeInfo(code:String, completion: @escaping (CodeType?) -> ())
+    {
+        let url = URL(string: "http://wodule.io/api/code" + "/\(code)")
+        print(url!)
+        
+        Alamofire.request(url!, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
+            
+            var result: CodeType?
+            
+            if response.response?.statusCode == 200
+            {
+                
+                let json = response.result.value as? [[String: AnyObject]]
+                
+                if let data = json?[0]
+                {
+                    if let code = try? CodeType(json: data)
+                    {
+                        result = code
+                    }
+                    else
+                    {
+                        result = nil
+                    }
+                    
+                }
+                else
+                {
+                    result = nil
+                }
+            }
+            else
+            {
+                print(response.response!.statusCode)
+                result = nil
+            }
+            
+            completion(result)
+        }
+    }
+    
+}
+
+struct LoginWithSocial
+{
+    
+    static func LoginUserWithSocial(username: String, password: String, completion: @escaping (Bool?,Bool?) -> ())
+    {
+        let url = URL(string: APIURL.loginURL)
+        let parameter:Parameters = ["user_name": username, "password": password,"social": "true"]
+        let httpHeader: HTTPHeaders = ["Content-Type":"application/x-www-form-urlencoded"]
+        
+        Alamofire.request(url!, method: HTTPMethod.post, parameters: parameter, encoding: URLEncoding.httpBody, headers: httpHeader).responseJSON(completionHandler: { (response) in
+            
+            print("\nSTATUS CODE, RESULT", response.response!.statusCode, response.result)
+            
+            if response.response?.statusCode == 200
+            {
+                if let json = response.result.value as? [String: AnyObject]
+                {
+                    print(json)
+                    if let token = json["token"] as? String, let first = json["first"] as? Bool
+                    {
+                        print("TOKEN:\n -------->", token)
+                        userDefault.set(token, forKey: TOKEN_STRING)
+                        userDefault.synchronize()
+                        
+                        completion(first, true)
+                    }
+                    
+                }
+            }
+            else
+            {
+                completion(nil, false)
+            }
+            
+        })
+        
+    }
+    
+    
+    static func getUserInfoSocial(withToken token: String, completion: @escaping (NSDictionary?) -> ())
+    {
+        let url  = URL(string: APIURL.getProfileURL)
+        let httpHeader: HTTPHeaders = ["Authorization":"Bearer \(token)"]
+        
+        Alamofire.request(url!, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.httpBody, headers: httpHeader).responseJSON(completionHandler: { (response) in
+            
+            var result: NSDictionary?
+            
+            if response.response?.statusCode == 200
+            {
+                let json = response.result.value as? [String: AnyObject]
+                if let user = json?["user"] as? NSDictionary
+                {
+                    result = user
+                }
+                else
+                {
+                    result = nil
+                }
+                completion(result)
+                
+            }
+                
+            else
+            {
+                print(response.response!.statusCode)
+                completion(nil)
+            }
+            
+        })
+        
+    }
+}
+
 struct UserInfoAPI
 {
     
@@ -96,32 +286,22 @@ struct UserInfoAPI
         
     }
     
-    
-    static func getUserProfile(withToken token: String,completion: @escaping (UserInfoAPI?) -> ())
+    static func getUserInfo(withToken token: String,completion: @escaping (NSDictionary?) -> ())
     {
         let url  = URL(string: APIURL.getProfileURL)
         let httpHeader: HTTPHeaders = ["Authorization":"Bearer \(token)"]
         
         Alamofire.request(url!, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.httpBody, headers: httpHeader).responseJSON(completionHandler: { (response) in
             
-            var result: UserInfoAPI?
+            var result: NSDictionary?
             
             if response.response?.statusCode == 200
             {
-                let json = response.result.value as? [String: AnyObject]
-                if let user = json?["user"] as? [String: AnyObject]
+                let json = response.result.value as? NSDictionary
+                if let user = json?["user"] as? NSDictionary
                 {
-                    let ln_first = user["ln_first"] as? String ?? nil
-                    let native_name = user["native_name"] as? String ?? nil
-                    let suffix = user["suffix"] as? String ?? nil
-                    let address = user["address"] as? String ?? nil
-                    let ethnicity = user["ethnicity"] as? String ?? nil
-                    let religion = user["religion"] as? String ?? nil
+                    result = user
                     
-                    if let info = try? UserInfoAPI(json: user, ln_first: ln_first, native_name: native_name, suffix: suffix, address: address, ethnicity: ethnicity, religion: religion)
-                    {
-                        result = info
-                    }
                 }
                 else
                 {
@@ -134,7 +314,6 @@ struct UserInfoAPI
         })
         
     }
-    
     
     static func LoginUser(username: String, password: String, completion: @escaping (Bool?) -> ())
     {
@@ -185,7 +364,7 @@ struct UserInfoAPI
             {
                 data.append(imageData, withName: "picture", fileName: dateformat.string(from: Date()) + ".jpg", mimeType: "image/jpg")
             }
-            
+                
             else{
                 print("\nPICTURE DATA:------>", picture)
             }
@@ -302,9 +481,16 @@ struct UserInfoAPI
                     
                 })
                 
+                upload.response(completionHandler: { (respone) in
+                    
+                    print(respone.response)
+                    
+                })
+                
                 upload.responseJSON(completionHandler: { (response) in
                     
                     print(response.description)
+                    print(response.result.value)
                     completion(true)
                 })
                 
@@ -378,7 +564,7 @@ struct Categories
                         {
                             result = []
                             completion(false,result)
-
+                            
                         }
                     }
                     completion(true,result)
@@ -388,7 +574,7 @@ struct Categories
             {
                 result = []
                 completion(false,result)
-
+                
             }
             
             

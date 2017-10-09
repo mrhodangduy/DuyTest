@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import GoogleSignIn
+import FBSDKCoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -41,6 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         userDefault.removeObject(forKey: PASSWORD_STRING)
         userDefault.removeObject(forKey: CODE_STRING)
         userDefault.removeObject(forKey: NOTIFI_ERROR)
+        userDefault.removeObject(forKey: SOCIALKEY)
         userDefault.synchronize()
     }
     
@@ -48,9 +51,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         UIApplication.shared.statusBarStyle = .lightContent
+        
+        
+        // Initialize sign-in G+
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google services: \(configureError!)")
+        
+        // Initialize sign-in  FB
+        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        
+        
         return true
     }
-
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        if url.scheme?.hasPrefix("fb") == true {
+            
+            return FBSDKApplicationDelegate.sharedInstance().application(app, open: url, options: options)
+            
+        }
+        
+//        if url.scheme?.hasPrefix("wodule") == true {
+//            NotificationCenter.default.post(name: Notification.Name(rawValue: Notication_name.sfSafari), object: url)
+//            return true
+//        }
+        
+        return GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+        
+        
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.

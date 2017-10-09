@@ -14,6 +14,21 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>GTMOAuth2.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>GTMSessionFetcher.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>GoogleToolboxForMac.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JWGCircleCounter.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,7 +57,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6B835A03F40A61890518BB3C3F2CF947</key>
+		<key>107A9565F9DF88517DFD3E28C05B2B96</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>681BE6E3D02A43F9BA63777AC435C8FD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7B79D907D2033BCC0D65BAF2E87E265F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,7 +77,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A733CC9F66B8F1C3D38F37EC20DAAE9A</key>
+		<key>B1C4AAFAF49036C7007633DAA3C806AD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -62,7 +87,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DDE5609A41C0876CA22A36A982194A95</key>
+		<key>D2287C06C8B28553A89323C62FB7BE5A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F4E52FFC39AC50EBD26D4A8AC11638AD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
