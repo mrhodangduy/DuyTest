@@ -101,7 +101,7 @@ class NewUser_Page3VC: UIViewController {
             
             saveData()
             
-            let newuser = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "selfieVC") as! NewUser_Page4VC
+            let newuser = UIStoryboard(name: MAIN_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "selfieVC") as! NewUser_Page4VC
             newuser.imageData = imgData
             self.navigationController?.pushViewController(newuser, animated: true)
             

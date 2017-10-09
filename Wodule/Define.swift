@@ -35,6 +35,8 @@ let COMMENTVIEW_HEIGHT : CGFloat = 36/100
 
 let ASSESSOR_STORYBOARD = "Assessor"
 let EXAMINEE_STORYBOARD = "Examinee"
+let MAIN_STORYBOARD = "Main"
+let PROFILE_STORYBOARD = "Profile"
 
 let userDefault = UserDefaults.standard
 let TOKEN_STRING = "token"

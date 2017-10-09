@@ -55,8 +55,6 @@ class ForgotPasswordVC: UIViewController {
         formatter.dateFormat = "YYYY-MM-dd"
         tf_Birthday.text = "\(formatter.string(from: datePicker.date))"
         
-        //dismiss date picker dialog
-        
         self.view.endEditing(true)
     }
 

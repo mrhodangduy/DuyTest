@@ -21,7 +21,6 @@ class Assessor_Part2VC: UIViewController {
     var isExpanding:Bool!
     var originalHeight:CGFloat!
     var isPlaying:Bool!
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +34,6 @@ class Assessor_Part2VC: UIViewController {
         dataTableView.delegate = self
 
         
-        // Do any additional setup after loading the view.
     }
     
     @IBAction func playAudioTap(_ sender: UIButton) {
@@ -100,7 +98,6 @@ class Assessor_Part2VC: UIViewController {
         self.backgroundView.removeFromSuperview()
         self.dataTableView.removeFromSuperview()
     }
-
 
 }
 

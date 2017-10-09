@@ -123,7 +123,7 @@ class Assessor_HomeVC: UIViewController {
    
     @IBAction func editProfile(_ sender: Any) {
 
-        let editprofileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "editprofileVC") as! EditProfileVC
+        let editprofileVC = UIStoryboard(name: PROFILE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "editprofileVC") as! EditProfileVC
         
         editprofileVC.userInfo = self.userInfo
         self.navigationController?.pushViewController(editprofileVC, animated: true)

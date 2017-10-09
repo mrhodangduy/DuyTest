@@ -108,20 +108,20 @@ class LoginVC: UIViewController {
     
     @IBAction func register_newuserBtnTap(_ sender: Any) {
         
-        let newuser = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newuser_page1VC") as! NewUser_Page1VC
+        let newuser = UIStoryboard(name: MAIN_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "newuser_page1VC") as! NewUser_Page1VC
         self.navigationController?.pushViewController(newuser, animated: true)
         
     }
     
     @IBAction func forgotPasswordTap(_ sender: Any) {
         
-        let forgotpassVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "forgotpassVC") as! ForgotPasswordVC
+        let forgotpassVC = UIStoryboard(name: MAIN_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "forgotpassVC") as! ForgotPasswordVC
         self.present(forgotpassVC, animated: true, completion: nil)
     }
 
     @IBAction func licenseBtnTap(_ sender: Any) {
         
-        let licenseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "licenseVC") as! LicenseVC
+        let licenseVC = UIStoryboard(name: MAIN_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "licenseVC") as! LicenseVC
         self.navigationController?.pushViewController(licenseVC, animated: true)
         
     }
