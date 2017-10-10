@@ -18,6 +18,7 @@ class APIURL{
     static let updateProfileURL = "http://wodule.io/api/profile/update"
     static let categoriesURL = "http://wodule.io/api/category"
     static let allrecordURL = "http://wodule.io/api/records"
+    static let getCodeInfoURL = "http://wodule.io/api/code"
     
 }
 

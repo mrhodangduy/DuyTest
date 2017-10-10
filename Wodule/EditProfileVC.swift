@@ -60,12 +60,23 @@ class EditProfileVC: UIViewController {
         
         print("\nEDIT USER INFO:-->\n" , userInfo)
         
+        tf_Email.isUserInteractionEnabled = false
+        
         dataTableView.delegate = self
         dataTableView.dataSource = self
         
         showDatePicker()
         
-        lbb_Type.text = "Type: " + (userInfo["type"] as! String).uppercased()
+        if userInfo["type"] as? String != nil
+        {
+            lbb_Type.text = "Type: " + (userInfo["type"] as! String).uppercased()
+        }
+        
+        else
+        {
+            lbb_Type.text = "Type: Undefine"
+        }
+        
         
         
         if userInfo["picture"] as! String == "http://wodule.io/user/default.jpg"
@@ -91,7 +102,21 @@ class EditProfileVC: UIViewController {
             }
         
         case INSTAGRAMLOGIN:
-            return
+            
+            if userInfo["picture"] as! String == "http://wodule.io/user/default.jpg"
+            {
+                img_Avatar.sd_setImageWithPreviousCachedImage(with: socialAvatar, placeholderImage: nil, options: [], progress: nil, completed: nil)
+            }
+            else
+            {
+                img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo["picture"] as! String), placeholderImage: nil, options: [], progress: nil, completed: nil)
+            }
+            
+            if (tf_Email.text?.characters.count)! == 0
+            {
+                tf_Email.isUserInteractionEnabled = true
+            }
+                        
             
         default:
             

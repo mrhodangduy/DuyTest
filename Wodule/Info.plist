@@ -18,12 +18,20 @@
 	<string>1989544367997799</string>
 	<key>FacebookDisplayName</key>
 	<string>Wodule</string>
+    
+    <key>InstagramAppClientId</key>
+    <string>88ff5198ac1a4959ae6213874f806fd0</string>
+    <key>InstagramAppRedirectURL</key>
+    
+    <string>http://wodule.io/api/redirectIG</string>
+    
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
 		<string>fb-messenger-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
+		<string>instagram</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>

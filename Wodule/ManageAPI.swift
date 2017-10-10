@@ -10,6 +10,52 @@ import Foundation
 import Alamofire
 import SVProgressHUD
 
+struct InstagramAPI
+{
+    static let INSTAGRAM_AUTHURL = "https://api.instagram.com/oauth/authorize/"
+    static let INSTAGRAM_APIURl = "https://api.instagram.com/v1/users/"
+    static let INSTAGRAM_CLIENT_ID = "c241ecb5bd874465ad80deb0398fb828"
+    static let INSTAGRAM_CLIENTSERCRET = "9561f1054d27482dbd73aa3e7c60b0f4"
+    static let INSTAGRAM_REDIRECT_URI = "http://wodule.io/api/redirectIG"
+    static let INSTAGRAM_ACCESS_TOKEN = "access_token"
+    static let INSTAGRAM_SCOPE = "public_content" /* add whatever scope you need https://www.instagram.com/developer/authorization/ */
+    
+    
+    static func getIDIntergram(_ token: String, complete:@escaping (NSDictionary?, Bool?) ->()) {
+        Alamofire.request("https://api.instagram.com/v1/users/self/?access_token=\(token)").responseJSON { (response) in
+            
+            print(response.result.value!)
+            
+            switch(response.result) {
+            case .success(_):
+                guard let value = response.result.value else {
+                    complete(nil, true)
+                    return
+                }
+                if let json = value as? NSDictionary {
+                    
+                    complete(json, nil)
+                }
+                    
+                else
+                {
+                    complete(nil, true)
+                    return
+                }
+                
+                complete(nil, true)
+                
+                
+            case .failure(let error):
+                print(error)
+                complete(nil, true)
+                
+            }
+        }
+    }
+}
+
+
 
 struct CodeType
 {
@@ -32,7 +78,7 @@ struct CodeType
         guard let Class = json["class"] as? String else { throw error.missing("mising")}
         guard let adviser = json["adviser"] as? String else { throw error.missing("mising")}
         guard let id = json["id"] as? Int else { throw error.missing("mising")}
-
+        
         self.id = id
         self.code = code
         self.tpye = tpye
@@ -85,7 +131,7 @@ struct CodeType
     
     static func getUniqueCodeInfo(code:String, completion: @escaping (CodeType?) -> ())
     {
-        let url = URL(string: "http://wodule.io/api/code" + "/\(code)")
+        let url = URL(string: APIURL.getCodeInfoURL + "/\(code)")
         print(url!)
         
         Alamofire.request(url!, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
@@ -97,26 +143,40 @@ struct CodeType
                 
                 let json = response.result.value as? [[String: AnyObject]]
                 
-                if let data = json?[0]
+                if json != nil
                 {
-                    if let code = try? CodeType(json: data)
+                    if let data = json?.first
                     {
-                        result = code
+                        if let code = try? CodeType(json: data)
+                        {
+                            result = code
+                        }
+                        else
+                        {
+                            result = nil
+                        }
+                        
                     }
                     else
                     {
                         result = nil
                     }
-                    
                 }
                 else
                 {
                     result = nil
                 }
+                
             }
             else
             {
                 print(response.response!.statusCode)
+                let json = response.result.value as? [String: AnyObject]
+                if let error = json?["error"] as? String
+                {
+                    userDefault.set(error, forKey: NOTIFI_ERROR)
+                    userDefault.synchronize()
+                }
                 result = nil
             }
             
@@ -146,7 +206,7 @@ struct LoginWithSocial
                     print(json)
                     if let token = json["token"] as? String, let first = json["first"] as? Bool
                     {
-                        print("TOKEN:\n -------->", token)
+                        print("TOKEN:\n-------->", token)
                         userDefault.set(token, forKey: TOKEN_STRING)
                         userDefault.synchronize()
                         

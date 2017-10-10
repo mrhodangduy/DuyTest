@@ -37,6 +37,10 @@
 		630BD8C11F8237AB00B24CA5 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630BD8C01F8237AB00B24CA5 /* Define.swift */; };
 		630BD8C51F8244A200B24CA5 /* NewUser2_TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630BD8C41F8244A200B24CA5 /* NewUser2_TableViewCell.swift */; };
 		630BD8C71F82450600B24CA5 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630BD8C61F82450600B24CA5 /* Extension.swift */; };
+		6347CF081F8C6819009D717D /* InstagramLoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF071F8C6819009D717D /* InstagramLoginVC.swift */; };
+		6347CF0A1F8C6FA5009D717D /* AuthInstagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF091F8C6FA5009D717D /* AuthInstagram.swift */; };
+		6347CF0C1F8CB687009D717D /* ManageAPI_Exam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF0B1F8CB687009D717D /* ManageAPI_Exam.swift */; };
+		6347CF0E1F8CBBB4009D717D /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF0D1F8CBBB4009D717D /* Recording.swift */; };
 		6352A0681F8B347600B13CC1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6352A0671F8B347600B13CC1 /* GoogleService-Info.plist */; };
 		6362081B1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6362081A1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift */; };
 		63A36BF11F849F1A005857DE /* RoundTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A36BF01F849F1A005857DE /* RoundTextView.swift */; };
@@ -107,6 +111,10 @@
 		630BD8C01F8237AB00B24CA5 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		630BD8C41F8244A200B24CA5 /* NewUser2_TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewUser2_TableViewCell.swift; sourceTree = "<group>"; };
 		630BD8C61F82450600B24CA5 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		6347CF071F8C6819009D717D /* InstagramLoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstagramLoginVC.swift; sourceTree = "<group>"; };
+		6347CF091F8C6FA5009D717D /* AuthInstagram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthInstagram.swift; sourceTree = "<group>"; };
+		6347CF0B1F8CB687009D717D /* ManageAPI_Exam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManageAPI_Exam.swift; sourceTree = "<group>"; };
+		6347CF0D1F8CBBB4009D717D /* Recording.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
 		6352A0671F8B347600B13CC1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6362081A1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginWithGooglePlusDelegate.swift; sourceTree = "<group>"; };
 		63A36BF01F849F1A005857DE /* RoundTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundTextView.swift; sourceTree = "<group>"; };
@@ -241,7 +249,10 @@
 				630BD8C01F8237AB00B24CA5 /* Define.swift */,
 				630BD8C61F82450600B24CA5 /* Extension.swift */,
 				DA7517BB1F82923B00E96E56 /* ManageAPI.swift */,
+				6347CF091F8C6FA5009D717D /* AuthInstagram.swift */,
 				63F145A41F8772E900CD03BF /* Wodule-Bridging-Header.h */,
+				6347CF0B1F8CB687009D717D /* ManageAPI_Exam.swift */,
+				6347CF0D1F8CBBB4009D717D /* Recording.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -257,6 +268,7 @@
 				630BD8B21F821D6F00B24CA5 /* NewUser_Page4VC.swift */,
 				630BD8B41F821D8000B24CA5 /* ForgotPasswordVC.swift */,
 				6362081A1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift */,
+				6347CF071F8C6819009D717D /* InstagramLoginVC.swift */,
 			);
 			name = Login_Register;
 			sourceTree = "<group>";
@@ -544,6 +556,7 @@
 				63F1459F1F8721FA00CD03BF /* Examinee_CategoriesVC.swift in Sources */,
 				DAAD6B511F8530DD00F45371 /* Assessor_OverViewCell.swift in Sources */,
 				630BD89D1F81DC8700B24CA5 /* UIButtonX.swift in Sources */,
+				6347CF081F8C6819009D717D /* InstagramLoginVC.swift in Sources */,
 				63A36BFC1F84C375005857DE /* Assessor_Part4VC.swift in Sources */,
 				630BD89E1F81DC8700B24CA5 /* UIImageViewX.swift in Sources */,
 				630BD8C11F8237AB00B24CA5 /* Define.swift in Sources */,
@@ -553,6 +566,7 @@
 				6362081B1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift in Sources */,
 				63A36C081F84D230005857DE /* Assessor_AccountingVC.swift in Sources */,
 				63A36C021F84CEE4005857DE /* Assessor_HistoryVC.swift in Sources */,
+				6347CF0E1F8CBBB4009D717D /* Recording.swift in Sources */,
 				63A36BF61F84A1DA005857DE /* Assessor_Part1VC.swift in Sources */,
 				DAAD6B491F85309600F45371 /* Assessor_Part1Cell.swift in Sources */,
 				630BD8B51F821D8000B24CA5 /* ForgotPasswordVC.swift in Sources */,
@@ -563,6 +577,7 @@
 				63A36BF81F84C35C005857DE /* Assessor_Part2VC.swift in Sources */,
 				63D0FCD21F861AC2006347B0 /* EditProfileCell.swift in Sources */,
 				DA7560991F83F874008DB772 /* Part2VC.swift in Sources */,
+				6347CF0A1F8C6FA5009D717D /* AuthInstagram.swift in Sources */,
 				DA7560A11F83F8A5008DB772 /* EndVC.swift in Sources */,
 				630BD8A41F81DC8700B24CA5 /* UIViewX.swift in Sources */,
 				630BD89C1F81DC8700B24CA5 /* TextFieldMaxLength.swift in Sources */,
@@ -587,6 +602,7 @@
 				DA7517BC1F82923B00E96E56 /* ManageAPI.swift in Sources */,
 				630BD8C51F8244A200B24CA5 /* NewUser2_TableViewCell.swift in Sources */,
 				630BD8B11F821D5E00B24CA5 /* NewUser_Page3VC.swift in Sources */,
+				6347CF0C1F8CB687009D717D /* ManageAPI_Exam.swift in Sources */,
 				DA7517BA1F8275A200E96E56 /* NewUser3_TableViewCell.swift in Sources */,
 				630BD87F1F81D72100B24CA5 /* AppDelegate.swift in Sources */,
 				630BD8BE1F82352300B24CA5 /* NewUser1_TableViewCell.swift in Sources */,

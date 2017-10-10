@@ -43,7 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         userDefault.removeObject(forKey: PASSWORD_STRING)
         userDefault.removeObject(forKey: CODE_STRING)
         userDefault.removeObject(forKey: NOTIFI_ERROR)
-        userDefault.removeObject(forKey: SOCIALKEY)
         userDefault.synchronize()
     }
     
@@ -61,8 +60,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initialize sign-in  FB
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
-        
-        
         return true
     }
     
@@ -74,13 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
         
-//        if url.scheme?.hasPrefix("wodule") == true {
-//            NotificationCenter.default.post(name: Notification.Name(rawValue: Notication_name.sfSafari), object: url)
-//            return true
-//        }
-        
         return GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
-        
         
     }
     

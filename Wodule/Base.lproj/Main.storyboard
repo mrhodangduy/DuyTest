@@ -255,6 +255,39 @@
             </objects>
             <point key="canvasLocation" x="1159.2" y="34.632683658170919"/>
         </scene>
+        <!--Instagram LoginVC-->
+        <scene sceneID="qLG-Bk-mAw">
+            <objects>
+                <viewController storyboardIdentifier="instagramVC" id="Kqc-vM-5jG" customClass="InstagramLoginVC" customModule="Wodule" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="k4G-fr-SfV"/>
+                        <viewControllerLayoutGuide type="bottom" id="mBU-i3-WF2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="TUO-ie-SnZ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DgQ-Tv-Q7G">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="DgQ-Tv-Q7G" firstAttribute="top" secondItem="TUO-ie-SnZ" secondAttribute="top" id="LMM-uO-gu6"/>
+                            <constraint firstAttribute="bottom" secondItem="DgQ-Tv-Q7G" secondAttribute="bottom" id="Ted-9R-HkN"/>
+                            <constraint firstAttribute="trailing" secondItem="DgQ-Tv-Q7G" secondAttribute="trailing" id="Us5-CF-hNp"/>
+                            <constraint firstItem="DgQ-Tv-Q7G" firstAttribute="leading" secondItem="TUO-ie-SnZ" secondAttribute="leading" id="VIP-W3-iFC"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webViewLogin" destination="DgQ-Tv-Q7G" id="JjL-Og-Bev"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EnK-L1-qaI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1148" y="713"/>
+        </scene>
         <!--LicenseVC-->
         <scene sceneID="Slp-j6-icR">
             <objects>
