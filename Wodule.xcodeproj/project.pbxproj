@@ -40,7 +40,6 @@
 		6347CF081F8C6819009D717D /* InstagramLoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF071F8C6819009D717D /* InstagramLoginVC.swift */; };
 		6347CF0A1F8C6FA5009D717D /* AuthInstagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF091F8C6FA5009D717D /* AuthInstagram.swift */; };
 		6347CF0C1F8CB687009D717D /* ManageAPI_Exam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF0B1F8CB687009D717D /* ManageAPI_Exam.swift */; };
-		6347CF0E1F8CBBB4009D717D /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6347CF0D1F8CBBB4009D717D /* Recording.swift */; };
 		6352A0681F8B347600B13CC1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6352A0671F8B347600B13CC1 /* GoogleService-Info.plist */; };
 		6362081B1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6362081A1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift */; };
 		63A36BF11F849F1A005857DE /* RoundTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A36BF01F849F1A005857DE /* RoundTextView.swift */; };
@@ -60,6 +59,8 @@
 		63F1459F1F8721FA00CD03BF /* Examinee_CategoriesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F1459E1F8721FA00CD03BF /* Examinee_CategoriesVC.swift */; };
 		63F145A11F8732EE00CD03BF /* Part3_TempVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F145A01F8732EE00CD03BF /* Part3_TempVC.swift */; };
 		63F145A31F87330600CD03BF /* Part4_TempVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F145A21F87330600CD03BF /* Part4_TempVC.swift */; };
+		DA1620751F8D0B720056D7D3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1620741F8D0B720056D7D3 /* AudioToolbox.framework */; };
+		DA1620771F8D16200056D7D3 /* AudioRecorderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1620761F8D16200056D7D3 /* AudioRecorderManager.swift */; };
 		DA7517BA1F8275A200E96E56 /* NewUser3_TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7517B91F8275A200E96E56 /* NewUser3_TableViewCell.swift */; };
 		DA7517BC1F82923B00E96E56 /* ManageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7517BB1F82923B00E96E56 /* ManageAPI.swift */; };
 		DA7560931F83F83B008DB772 /* AssessmentHistoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7560921F83F83B008DB772 /* AssessmentHistoryVC.swift */; };
@@ -114,7 +115,6 @@
 		6347CF071F8C6819009D717D /* InstagramLoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstagramLoginVC.swift; sourceTree = "<group>"; };
 		6347CF091F8C6FA5009D717D /* AuthInstagram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthInstagram.swift; sourceTree = "<group>"; };
 		6347CF0B1F8CB687009D717D /* ManageAPI_Exam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManageAPI_Exam.swift; sourceTree = "<group>"; };
-		6347CF0D1F8CBBB4009D717D /* Recording.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
 		6352A0671F8B347600B13CC1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6362081A1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginWithGooglePlusDelegate.swift; sourceTree = "<group>"; };
 		63A36BF01F849F1A005857DE /* RoundTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundTextView.swift; sourceTree = "<group>"; };
@@ -136,6 +136,9 @@
 		63F145A21F87330600CD03BF /* Part4_TempVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Part4_TempVC.swift; sourceTree = "<group>"; };
 		63F145A41F8772E900CD03BF /* Wodule-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Wodule-Bridging-Header.h"; sourceTree = "<group>"; };
 		A0A11A97D58C2A42E8F6CAAA /* Pods-Wodule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wodule.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wodule/Pods-Wodule.release.xcconfig"; sourceTree = "<group>"; };
+		DA1620711F8D0B5E0056D7D3 /* Wodule.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wodule.entitlements; sourceTree = "<group>"; };
+		DA1620741F8D0B720056D7D3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		DA1620761F8D16200056D7D3 /* AudioRecorderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecorderManager.swift; sourceTree = "<group>"; };
 		DA7517B91F8275A200E96E56 /* NewUser3_TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewUser3_TableViewCell.swift; sourceTree = "<group>"; };
 		DA7517BB1F82923B00E96E56 /* ManageAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManageAPI.swift; sourceTree = "<group>"; };
 		DA7560921F83F83B008DB772 /* AssessmentHistoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssessmentHistoryVC.swift; sourceTree = "<group>"; };
@@ -161,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB3BF60C07214104201DE436 /* Pods_Wodule.framework in Frameworks */,
+				DA1620751F8D0B720056D7D3 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +192,7 @@
 		630BD87D1F81D72100B24CA5 /* Wodule */ = {
 			isa = PBXGroup;
 			children = (
+				DA1620711F8D0B5E0056D7D3 /* Wodule.entitlements */,
 				6352A0671F8B347600B13CC1 /* GoogleService-Info.plist */,
 				630BD8BF1F82379900B24CA5 /* Model */,
 				630BD8BC1F82350300B24CA5 /* View */,
@@ -252,7 +257,7 @@
 				6347CF091F8C6FA5009D717D /* AuthInstagram.swift */,
 				63F145A41F8772E900CD03BF /* Wodule-Bridging-Header.h */,
 				6347CF0B1F8CB687009D717D /* ManageAPI_Exam.swift */,
-				6347CF0D1F8CBBB4009D717D /* Recording.swift */,
+				DA1620761F8D16200056D7D3 /* AudioRecorderManager.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 		FB22EA460FDEEE17FA7DA537 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA1620741F8D0B720056D7D3 /* AudioToolbox.framework */,
 				DE267463118FE2EB33379522 /* Pods_Wodule.framework */,
 			);
 			name = Frameworks;
@@ -421,6 +427,11 @@
 						DevelopmentTeam = NC5GA6MATT;
 						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.InterAppAudio = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -566,7 +577,6 @@
 				6362081B1F8B659C005D800F /* LoginWithGooglePlusDelegate.swift in Sources */,
 				63A36C081F84D230005857DE /* Assessor_AccountingVC.swift in Sources */,
 				63A36C021F84CEE4005857DE /* Assessor_HistoryVC.swift in Sources */,
-				6347CF0E1F8CBBB4009D717D /* Recording.swift in Sources */,
 				63A36BF61F84A1DA005857DE /* Assessor_Part1VC.swift in Sources */,
 				DAAD6B491F85309600F45371 /* Assessor_Part1Cell.swift in Sources */,
 				630BD8B51F821D8000B24CA5 /* ForgotPasswordVC.swift in Sources */,
@@ -595,6 +605,7 @@
 				DA75609D1F83F88B008DB772 /* Part3VC.swift in Sources */,
 				630BD8811F81D72100B24CA5 /* LoginVC.swift in Sources */,
 				630BD8A01F81DC8700B24CA5 /* UISliderX.swift in Sources */,
+				DA1620771F8D16200056D7D3 /* AudioRecorderManager.swift in Sources */,
 				63A36BFA1F84C36B005857DE /* Assessor_Part3VC.swift in Sources */,
 				DA7560971F83F85E008DB772 /* Instruction_GuideVC.swift in Sources */,
 				63F1459D1F8721E500CD03BF /* Examinee_CategoriesCell.swift in Sources */,
@@ -731,6 +742,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Wodule/Wodule.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEVELOPMENT_TEAM = NC5GA6MATT;
@@ -752,6 +764,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Wodule/Wodule.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEVELOPMENT_TEAM = NC5GA6MATT;

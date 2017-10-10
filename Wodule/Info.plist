@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) will record your voice</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -18,13 +20,10 @@
 	<string>1989544367997799</string>
 	<key>FacebookDisplayName</key>
 	<string>Wodule</string>
-    
-    <key>InstagramAppClientId</key>
-    <string>88ff5198ac1a4959ae6213874f806fd0</string>
-    <key>InstagramAppRedirectURL</key>
-    
-    <string>http://wodule.io/api/redirectIG</string>
-    
+	<key>InstagramAppClientId</key>
+	<string>88ff5198ac1a4959ae6213874f806fd0</string>
+	<key>InstagramAppRedirectURL</key>
+	<string>http://wodule.io/api/redirectIG</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

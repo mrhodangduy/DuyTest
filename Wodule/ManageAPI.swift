@@ -498,9 +498,7 @@ struct UserInfoAPI
         
         Alamofire.upload(multipartFormData: { (data) in
             
-            print("PICTURE:",picture)
-            
-            
+                        
             let dateformat = DateFormatter()
             dateformat.dateFormat = "MM_DD_YY_hh:mm:ss"
             

@@ -31,6 +31,29 @@ class Part1VC: UIViewController {
     var seconds:Int!
     
     
+    func StarRecording()
+    {
+       
+        let dateformat = DateFormatter()
+        dateformat.dateFormat = "MM_dd_YY_hh_mm_ss"
+        
+        AudioRecorderManager.shared.recored(fileName: dateformat.string(from: Date())) { (status:Bool) in
+            
+            if status == true
+            {
+                print("Did start recording")
+            }
+            else
+            {
+                print("Error starting recorder")
+            }
+        }
+    }
+    func stopRecord()
+    {
+        AudioRecorderManager.shared.finishRecording()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -124,7 +147,30 @@ class Part1VC: UIViewController {
         
         part2VC.Exam = self.Exam
         
+        let url  = AudioRecorderManager.shared.getUserDocumentsPath()
+        print("File LOcation:", url.path)
+        
+        if FileManager.default.fileExists(atPath: url.path)
+        {
+            print("File found and ready to play")
+            print(listFilesFromDocumentsFolder())
+        }
+        else
+        {
+            print("Nofile")
+        }
+        
         self.navigationController?.pushViewController(part2VC, animated: true)
+    }
+    func listFilesFromDocumentsFolder() -> [String]?
+    {
+        let fileMngr = FileManager.default;
+        
+        // Full path to documents directory
+        let docs = fileMngr.urls(for: .documentDirectory, in: .userDomainMask)[0].path
+        
+        // List all contents of directory and return as [String] OR nil if failed
+        return try? fileMngr.contentsOfDirectory(atPath:docs)
     }
     
 }
@@ -132,6 +178,9 @@ class Part1VC: UIViewController {
 extension Part1VC: JWGCircleCounterDelegate
 {
     func circleCounterTimeDidExpire(_ circleCounter: JWGCircleCounter!) {
+    
+        self.StarRecording()
+        
         lbl_CountdownTime.isHidden = false
         createrCountdownTimer()
         UIView.animate(withDuration: expectTime, delay: 1, options: [], animations: {
@@ -139,6 +188,7 @@ extension Part1VC: JWGCircleCounterDelegate
             self.view.layoutIfNeeded()
         }) { (done) in
             self.nextBtn.isHidden = false
+            self.stopRecord()
         }
         
     }

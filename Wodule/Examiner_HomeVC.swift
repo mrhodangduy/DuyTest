@@ -34,6 +34,9 @@ class Examiner_HomeVC: UIViewController {
         super.viewDidLoad()
         
         
+        
+        
+        
         if userDefault.object(forKey: SOCIALKEY) as? String != nil
         {
             socialIdentifier = userDefault.object(forKey: SOCIALKEY) as! String
@@ -58,6 +61,12 @@ class Examiner_HomeVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadNewData), name: NSNotification.Name(rawValue: NOTIFI_UPDATED), object: nil)
         
     }
+    
+    
+    
+    
+    
+    
     
     func asignDataInView()
     {

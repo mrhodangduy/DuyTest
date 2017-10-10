@@ -60,6 +60,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initialize sign-in  FB
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
+        print("Simulator path",FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0])
+        AudioRecorderManager.shared.setup()
+        
         return true
     }
     

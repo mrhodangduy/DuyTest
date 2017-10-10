@@ -176,7 +176,7 @@ class LoginVC: UIViewController {
                         let header = ["Authorization":"Bearer \(token)"]
                         
                         print("PARA:--->", para)
-                        
+                        self.loadingShow()
                         UserInfoAPI.updateUserProfile(para: para, header: header, picture: nil, completion: { (status) in
                             
                             if status
@@ -271,6 +271,7 @@ class LoginVC: UIViewController {
                     let username = "u02" + id!
                     let password = "instagram"
                     
+                    self.loadingShow()
                     LoginWithSocial.LoginUserWithSocial(username: username, password: password, completion: { (first, status) in
                         
                         if status!
