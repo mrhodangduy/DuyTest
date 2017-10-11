@@ -16,16 +16,15 @@ class Instruction_GuideVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         loadingShow()
         DispatchQueue.global(qos: .default).async { 
             CategoriesExam.getExam(categoryID: self.categoryID) { (results) in
                 
                 self.CategoryExamList = results!
                 
-                DispatchQueue.main.async(execute: { 
-                    self.loadingHide()
-                    print("\nCATEGORIES EXAM LIST:\n----->",self.CategoryExamList)
-                })
+                self.loadingHide()
+                print("\nCATEGORIES EXAM LIST:\n----->",self.CategoryExamList)
             }
         }
         

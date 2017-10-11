@@ -45,8 +45,10 @@ class LoginVC: UIViewController {
             switch loginResult {
             case .failed(let error):
                 print(error)
+                self.alertMissingText(mess: "Login failed", textField: nil)
             case .cancelled:
                 print("User cancelled login.")
+                self.alertMissingText(mess: "Login cancelled", textField: nil)
             case .success( _, _, let accessToken):
                 
                 print(accessToken)
@@ -263,6 +265,7 @@ class LoginVC: UIViewController {
                     let id = data?["id"] as? String
                     let name = data?["full_name"] as? String
                     var profile_picture = data?["profile_picture"] as? String
+                    
                     if profile_picture != nil && (profile_picture?.contains("s150x150"))!
                     {
                         profile_picture = profile_picture?.replacingOccurrences(of: "/s150x150/", with: "/")

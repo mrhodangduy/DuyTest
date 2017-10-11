@@ -21,6 +21,7 @@ class APIURL{
     static let getCodeInfoURL = "http://wodule.io/api/code"
     static let updateSocialInfoURL = "http://wodule.io/api/socialite"
     static let getAllrecordURL = "http://wodule.io/api/records?page="
+
     
 }
 
@@ -68,7 +69,9 @@ let CODE_STRING = "code"
 let PASSWORD_STRING = "password"
 let NATIVE_STRING = "native"
 let SUFFIX_STRING = "suffix"
-let ADDRESS_STRING = "address"
+let ADDRESS1_STRING = "address1"
+let ADDRESS2_STRING = "address2"
+let ADDRESS3_STRING = "address3"
 let ETHNIC_STRING = "ethnicity"
 let RELIGION_STRING = "religion"
 let LASTNAMEFIRST_STRING = "ln_first"

@@ -45,7 +45,7 @@ class Part4_TempVC: UIViewController {
         nextBtn.isHidden = true
         
         guard let index = Exam.index(where: { $0.number == 4 }) else { return }
-        print(Exam[index])
+        print("\n\n",Exam[index])
         examID = Exam[index].identifier
         
         img_Photo.isHidden = true
@@ -98,37 +98,7 @@ class Part4_TempVC: UIViewController {
     @IBAction func nextBtnTap(_ sender: Any) {
         
         let endVC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "endassessmentVC") as! EndVC
-        
-        let url  = AudioRecorderManager.shared.getUserDocumentsPath()
-        print("File LOcation:", url.path)
-        
-        if FileManager.default.fileExists(atPath: url.path)
-        {
-            print("File found and ready to play")
-            print(listFilesFromDocumentsFolder()!)
-            print(url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a"))
-        }
-        else
-        {
-            print("No file")
-        }
-
-        let audioURL = url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a")
-        let data: Data?
-        do
-        {
-            data = try? Data(contentsOf: audioURL)
-        }
-        catch
-        {
-            
-        }
-        
-        ExamRecord.uploadExam(withToken: token!, idExam: examID, audiofile: data) { (status:Bool?, result:NSDictionary?) in
-            
-            print("UPLOAD DONE")
-        }
-        
+                
         self.navigationController?.pushViewController(endVC, animated: true)
     }
     
@@ -148,9 +118,11 @@ extension Part4_TempVC: JWGCircleCounterDelegate
             self.viewBackground.frame.size.width = self.containerView.frame.size.width
             self.view.layoutIfNeeded()
         }, completion: { (done) in
-            self.recordingMess.text = "DONE"
+            self.recordingMess.text = "Time Out"
             self.nextBtn.isHidden = false
             self.stopRecord(audioURL: audioURL)
+            self.uploadRecord(token: self.token!, userID: self.userID!, examID: self.examID)
+            
         })
         
     }

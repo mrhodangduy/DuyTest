@@ -75,7 +75,7 @@ class Examiner_HomeVC: UIViewController {
         print("IDENTIFIER:", socialIdentifier)
 
         switch socialIdentifier {
-        case GOOGLELOGIN,FACEBOOKLOGIN:
+        case GOOGLELOGIN,FACEBOOKLOGIN,INSTAGRAMLOGIN:
             
             if userInfomation["picture"] as! String == "http://wodule.io/user/default.jpg"
             {
@@ -86,8 +86,9 @@ class Examiner_HomeVC: UIViewController {
                 img_Avatar.sd_setImage(with: URL(string: userInfomation["picture"] as! String), placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
             }
             
+        case INSTAGRAMLOGIN:
+            print("INSTAGRAM LOGIN")
             
-        case INSTAGRAMLOGIN:           print("INSTAGRAMLOGIN")
         case NORMALLOGIN:
             img_Avatar.sd_setImage(with: URL(string: userInfomation["picture"] as! String), placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
         default:

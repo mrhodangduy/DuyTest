@@ -22,6 +22,7 @@ class Part1VC: UIViewController {
     @IBOutlet weak var lbl_Title: UILabel!
     @IBOutlet weak var decreaseBtn: UIButtonX!
     @IBOutlet weak var increaseBtn: UIButtonX!
+    @IBOutlet weak var recordingMess: UILabelX!
     
     var Exam = [CategoriesExam]()
     
@@ -42,13 +43,15 @@ class Part1VC: UIViewController {
         tv_Data.font = UIFont.systemFont(ofSize: fontSizeDefaultTV)
         
         guard let index = Exam.index(where: { $0.number == 1 }) else { return }
-        print(Exam[index])
+        print("\n\n",Exam[index])
         examID = Exam[index].identifier
         
         circleTime.circleTimerWidth = 2
         circleTime.circleBackgroundColor = .clear
         circleTime.circleColor = .white
         circleTime.delegate = self
+        recordingMess.isHidden = true
+
         
         image_Question.isHidden = true
         tv_Data.isHidden = true
@@ -79,12 +82,6 @@ class Part1VC: UIViewController {
             
         }
         
-        minutes = Int(expectTime) / 60
-        seconds = Int(expectTime) % 60
-        lbl_CountdownTime.text = String(format: "%02d:%02d", minutes, seconds)
-        
-        lbl_CountdownTime.isHidden = true
-        nextBtn.isHidden = true
         
     }
     
@@ -102,68 +99,17 @@ class Part1VC: UIViewController {
         tv_Data.font = UIFont.systemFont(ofSize: (tv_Data.font?.pointSize)! + 1)
         
     }
-
-    
-    func createrCountdownTimer()
-    {
-        time = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTime), userInfo: nil, repeats: true)
-    }
-    func updateTime()
-    {
-        
-        if(expectTime > 0){
-            minutes = Int(expectTime) / 60
-            seconds = Int(expectTime) % 60
-            lbl_CountdownTime.text = String(format: "%02d:%02d", minutes, seconds)
-            expectTime -= 1
-        }
-        else
-        {
-            lbl_CountdownTime.text = "DONE"
-            time.invalidate()
-        }
-    }
-    
+   
     
     @IBAction func nextBtnTap(_ sender: Any) {
         let part2VC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "part2VC") as! Part2VC
         
         part2VC.Exam = self.Exam
         
-        let url  = AudioRecorderManager.shared.getUserDocumentsPath()
-        print("File LOcation:", url.path)
-        
-        if FileManager.default.fileExists(atPath: url.path)
-        {
-            print("File found and ready to play")
-            print(listFilesFromDocumentsFolder()!)
-            print(url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a"))
-            
-            let audioURL = url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a")
-            
-            let data: Data?
-            do
-            {
-                data = try? Data(contentsOf: audioURL)
-            }
-            catch
-            {
-                
-            }
-            
-            ExamRecord.uploadExam(withToken: token!, idExam: examID, audiofile: data) { (status:Bool?, result:NSDictionary?) in
-                
-                print("UPLOAD DONE")
-            }
-
-        }
-        else
-        {
-            print("No file")
-        }
         
         self.navigationController?.pushViewController(part2VC, animated: true)
     }
+    
         
 }
 
@@ -176,14 +122,15 @@ extension Part1VC: JWGCircleCounterDelegate
             audioURL = audioURLs
         }
         
-        lbl_CountdownTime.isHidden = false
-        createrCountdownTimer()
+        self.recordingMess.isHidden = false
         UIView.animate(withDuration: expectTime, delay: 1, options: [], animations: {
             self.viewbackground.frame.size.width = self.containerView.frame.size.width
             self.view.layoutIfNeeded()
         }) { (done) in
             self.nextBtn.isHidden = false
+            self.recordingMess.text = "Time Out"
             self.stopRecord(audioURL: audioURL)
+            self.uploadRecord(token: self.token!, userID: self.userID!, examID: self.examID)
         }
         
     }

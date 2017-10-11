@@ -23,13 +23,16 @@ struct ExamRecord
         let dateformat = DateFormatter()
         dateformat.dateFormat = "MM_dd_YY_hh_mm_ss"
         
-        let uploadPath = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(dateformat.string(from: Date())).appendingPathExtension("m4a")
+//        let uploadPath = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(dateformat.string(from: Date())).appendingPathExtension("m4a")
         
         
         if let audioURL = audiofile
         {
-            try? audioURL.write(to: uploadPath!, options: Data.WritingOptions.atomic)
-            data.append(uploadPath!, withName: "audio")
+//            try? audioURL.write(to: uploadPath!, options: Data.WritingOptions.atomic)
+//            data.append(uploadPath!, withName: "audio")
+            print("\n\nAUDIODATA-->",audioURL)
+            data.append(audioURL, withName: "audio", fileName: "upload.m4a", mimeType: "audio/m4a")
+            print(data.boundary)
         }
         else
         {
@@ -57,8 +60,24 @@ struct ExamRecord
             
             upload.responseJSON(completionHandler: { (response) in
                 
-                print(response.result.value!)
+                guard let json = response.result.value as? NSDictionary else {return}
                 
+                if response.result.isSuccess
+                {
+                    if response.response?.statusCode == 200
+                    {
+                        completion(true, json)
+                    }
+                    else
+                    {
+                        completion(false, json)
+                    }
+                }
+                else
+                {
+                    completion(false, json)
+                }
+                                
             })
         }
         
@@ -95,6 +114,49 @@ struct ExamRecord
             
         }
     }
+    
+    static func postGrade(withToken token: String, identifier:Int, grade: Int, completion: @escaping (Bool?, Int?, NSDictionary?) -> ())
+    {
+        let url = URL(string: APIURL.baseURL + "/records/" + "\(identifier)" + "/grades")
+        let httpHeader:HTTPHeaders = ["Authorization":"Bearer \(token)"]
+        let para: Parameters = ["grade": "\(grade)"]
+        
+        Alamofire.request(url!, method: .post, parameters: para, encoding: URLEncoding.default, headers: httpHeader).responseJSON { (response) in
+            
+            guard let json = response.result.value as? NSDictionary else {return}
+            let code = response.response!.statusCode
+            
+            if response.result.isSuccess
+            {
+                if response.response?.statusCode == 200
+                {
+                    completion(true, code, json)
+                }
+                else
+                
+                {
+                    completion(false, code, json)
+                }
+            }
+            else
+            {
+                completion(true, code, json)
+            }
+            
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
         
 }

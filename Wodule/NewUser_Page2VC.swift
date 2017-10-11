@@ -100,7 +100,9 @@ class NewUser_Page2VC: UIViewController {
         userDefault.set(tf_Telephone.text!, forKey: PHONE_STRING)
         userDefault.set(tf_Email.text!, forKey: EMAIL_STRING)
         userDefault.set(tf_Nationality.text, forKey: NATIONALITY_STRING)
-        userDefault.set(tf_ResidenceAdd.text, forKey: ADDRESS_STRING)
+        userDefault.set(tf_ResidenceAdd.text, forKey: ADDRESS1_STRING)
+        userDefault.set(tf_OptionalAdd1.text, forKey: ADDRESS2_STRING)
+        userDefault.set(tf_OptionalAdd2.text, forKey: ADDRESS3_STRING)
         userDefault.set(tf_Ethnicity.text, forKey: ETHNIC_STRING)
         userDefault.synchronize()
     }

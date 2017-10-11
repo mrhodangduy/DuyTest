@@ -34,6 +34,9 @@ class NewUser_Page4VC: UIViewController {
     var native_name:String?
     var suffix: String?
     var address:String?
+    var address1:String?
+    var address2:String?
+    var address3:String?
     var ethnicity:String?
     var religion:String?
     var ln_first:Bool?
@@ -81,7 +84,9 @@ class NewUser_Page4VC: UIViewController {
         code = userDefault.object(forKey: CODE_STRING) as! String
         native_name = userDefault.object(forKey: NATIVE_STRING) as? String ?? nil
         suffix = userDefault.object(forKey: SUFFIX_STRING) as? String ?? nil
-        address = userDefault.object(forKey: ADDRESS_STRING) as? String ?? nil
+        address1 = userDefault.object(forKey: ADDRESS1_STRING) as? String ?? nil
+        address2 = userDefault.object(forKey: ADDRESS2_STRING) as? String ?? nil
+        address3 = userDefault.object(forKey: ADDRESS3_STRING) as? String ?? nil
         ethnicity = userDefault.object(forKey: ETHNIC_STRING) as? String ?? nil
         religion = userDefault.object(forKey: RELIGION_STRING) as? String ?? nil
         ln_first = userDefault.bool(forKey: LASTNAMEFIRST_STRING)
@@ -118,10 +123,47 @@ class NewUser_Page4VC: UIViewController {
         {
             para.updateValue(suffix!, forKey: "suffix")
         }
-        if (address?.trimmingCharacters(in: .whitespacesAndNewlines).characters.count)! > 0
+        
+        if (address1?.trimmingCharacters(in: .whitespacesAndNewlines).characters.count)! > 0
+        {
+            
+            address = address1!
+            
+        }
+        
+        if (address2?.trimmingCharacters(in: .whitespacesAndNewlines).characters.count)! > 0
+        {
+            if address != nil
+            {
+                address = address! + ", " + address2!
+
+            }
+            else
+            {
+                address = address2!
+
+            }
+        }
+        
+        if (address3?.trimmingCharacters(in: .whitespacesAndNewlines).characters.count)! > 0
+        {
+            if address != nil
+            {
+                address = address! + ", " + address3!
+
+            }
+            else
+            {
+                address = address3!
+
+            }
+        }
+
+        if address != nil
         {
             para.updateValue(address!, forKey: "address")
         }
+        
         if (ethnicity?.trimmingCharacters(in: .whitespacesAndNewlines).characters.count)! > 0
         {
             para.updateValue(ethnicity!, forKey: "ethnicity")
@@ -195,7 +237,9 @@ class NewUser_Page4VC: UIViewController {
         userDefault.removeObject(forKey: LASTNAMEFIRST_STRING)
         userDefault.removeObject(forKey: BIRTHDAY_STRING)
         userDefault.removeObject(forKey: COUNTRYOFBIRTH_STRING)
-        userDefault.removeObject(forKey: ADDRESS_STRING)
+        userDefault.removeObject(forKey: ADDRESS1_STRING)
+        userDefault.removeObject(forKey: ADDRESS2_STRING)
+        userDefault.removeObject(forKey: ADDRESS3_STRING)
         userDefault.removeObject(forKey: CITY_STRING)
         userDefault.removeObject(forKey: COUNTRY_STRING)
         userDefault.removeObject(forKey: EMAIL_STRING)

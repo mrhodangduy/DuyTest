@@ -12,6 +12,8 @@ import SVProgressHUD
 
 extension UIViewController
 {
+    
+    
     func listFilesFromDocumentsFolder() -> [String]?
     {
         let fileMngr = FileManager.default;
@@ -24,12 +26,51 @@ extension UIViewController
         return try? fileMngr.contentsOfDirectory(atPath:docs)
         
     }
+    
+    func uploadRecord(token: String,userID: Int, examID: Int)
+    {
+        let url  = AudioRecorderManager.shared.getUserDocumentsPath()
+        print("File LOcation:", url.path)
+        
+        if FileManager.default.fileExists(atPath: url.path)
+        {
+            print("File found and ready to upload")
+            print(self.listFilesFromDocumentsFolder()!)
+            print(url.appendingPathComponent("Recordedby-\(userID)-\(examID)").appendingPathExtension("m4a"))
+            
+            let audioURL = url.appendingPathComponent("Recordedby-\(userID)-\(examID)").appendingPathExtension("m4a")
+            
+            let data: Data?
+            do
+            {
+                data = try? Data(contentsOf: audioURL)
+            }
+            
+            ExamRecord.uploadExam(withToken: token, idExam: examID, audiofile: data) { (status:Bool?, result:NSDictionary?) in
+                
+                if status == true
+                {
+                    print("UPLOAD DONE")
+                }
+                else
+                {
+                    print(result!)
+                }
+            }            
+        }
+        else
+        {
+            print("No file")
+        }
+        
+    }
+
 
     
     func StarRecording(userID: Int, examID: Int, result: (_ audioURL: NSURL?) -> Void)
     {
         
-        AudioRecorderManager.shared.recored(fileName: "Recordby-\(userID)-\(examID)") { (status:Bool, audioURL:NSURL?) in
+        AudioRecorderManager.shared.recored(fileName: "Recordedby-\(userID)-\(examID)") { (status:Bool, audioURL:NSURL?) in
             
             if status == true
             {

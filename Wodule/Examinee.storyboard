@@ -1259,17 +1259,27 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TLT-o0-N0G">
                                         <rect key="frame" x="0.0" y="0.0" width="255" height="70"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1:20:36" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMP-1f-GOj">
-                                                <rect key="frame" x="100" y="25" width="55" height="19.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RECORDING..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WVj-NI-jTS" customClass="UILabelX" customModule="Wodule" customModuleProvider="target">
+                                                <rect key="frame" x="77.5" y="21" width="100" height="28"/>
+                                                <color key="backgroundColor" red="0.12132317569999999" green="0.35594362019999998" blue="0.18776360149999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="28" id="OTh-iO-Kl1"/>
+                                                    <constraint firstAttribute="width" constant="100" id="WsY-63-YAo"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="11"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="8"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="DMP-1f-GOj" firstAttribute="centerY" secondItem="TLT-o0-N0G" secondAttribute="centerY" id="dPs-7I-RCO"/>
-                                            <constraint firstItem="DMP-1f-GOj" firstAttribute="centerX" secondItem="TLT-o0-N0G" secondAttribute="centerX" id="vqJ-62-4Qg"/>
+                                            <constraint firstItem="WVj-NI-jTS" firstAttribute="centerY" secondItem="TLT-o0-N0G" secondAttribute="centerY" id="DBT-RX-Jtv"/>
+                                            <constraint firstItem="WVj-NI-jTS" firstAttribute="centerX" secondItem="TLT-o0-N0G" secondAttribute="centerX" id="YXE-n3-KAv"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -1333,9 +1343,9 @@
                         <outlet property="decreaseBtn" destination="ZM6-oO-k54" id="Qnk-cB-URU"/>
                         <outlet property="image_Question" destination="MgY-ri-YPs" id="iq1-nQ-zOv"/>
                         <outlet property="increaseBtn" destination="O00-Y1-ECE" id="QCA-yB-sI1"/>
-                        <outlet property="lbl_CountdownTime" destination="DMP-1f-GOj" id="uB7-iD-a3D"/>
                         <outlet property="lbl_Title" destination="VB0-3B-J0x" id="pze-TN-g58"/>
                         <outlet property="nextBtn" destination="Prz-Ox-Mxh" id="8Rc-SB-rjE"/>
+                        <outlet property="recordingMess" destination="WVj-NI-jTS" id="YP2-qx-SS0"/>
                         <outlet property="tv_Data" destination="xka-7v-aGd" id="vV8-PV-1aB"/>
                         <outlet property="viewbackground" destination="o7V-cC-cLd" id="sZM-0d-xV4"/>
                     </connections>

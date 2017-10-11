@@ -54,6 +54,8 @@ class Assessor_HomeVC: UIViewController {
         
         print("\nCURRENT USER TOKEN: ------>\n", token!)
         print("\nCURRENT USER INFO: ------>\n",userInfomation)
+        print("\nCURRENT USER AVATARLINK: ------>\n",socialAvatar)
+
         
         asignDataInView()
         
@@ -78,7 +80,7 @@ class Assessor_HomeVC: UIViewController {
         
         switch socialIdentifier {
             
-        case GOOGLELOGIN,FACEBOOKLOGIN:
+        case GOOGLELOGIN,FACEBOOKLOGIN, INSTAGRAMLOGIN:
             
             if userInfomation["picture"] as! String == "http://wodule.io/user/default.jpg"
             {
@@ -88,9 +90,7 @@ class Assessor_HomeVC: UIViewController {
             {
                 img_Avatar.sd_setImage(with: URL(string: userInfomation["picture"] as! String), placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
             }
-        case INSTAGRAMLOGIN:
-            print("INSTAGRAMLOGIN")
-            
+                  
         case NORMALLOGIN:
             img_Avatar.sd_setImage(with: URL(string: userInfomation["picture"] as! String), placeholderImage: nil, options: SDWebImageOptions.continueInBackground, completed: nil)
         default:
