@@ -33,6 +33,7 @@ extension LoginVC : GIDSignInDelegate, GIDSignInUIDelegate
                         
                         print(result!)
                         
+                        guard let userID = result?["id"] as? Int else { return }
                         if result!["type"] as? String == UserType.assessor.rawValue
                         {
                             let assessor_homeVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "assessor_homeVC") as! Assessor_HomeVC
@@ -58,7 +59,7 @@ extension LoginVC : GIDSignInDelegate, GIDSignInUIDelegate
                         else
                         {
                             print("Missing Code")
-                            self.createAlert(user: user)
+                            self.createAlertGPlus(user: user, password: password, userID: userID)
                             
                         }
                         
@@ -70,8 +71,6 @@ extension LoginVC : GIDSignInDelegate, GIDSignInUIDelegate
                     
                 }
             })
-            
-            
             
         } else {
             
@@ -98,7 +97,7 @@ extension LoginVC : GIDSignInDelegate, GIDSignInUIDelegate
         self.dismiss(animated: true, completion: nil)
     }
     
-    func createAlert(user: GIDGoogleUser)
+    func createAlertGPlus(user: GIDGoogleUser, password: String, userID: Int)
     {
         let alertInputCode = UIAlertController(title: "Wodule", message: "Please enter a valid code.", preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -108,105 +107,100 @@ extension LoginVC : GIDSignInDelegate, GIDSignInUIDelegate
             
             self.loadingShow()
             
-            let fNameField = alertInputCode.textFields![0] as UITextField
-            
-            if fNameField.text?.characters.count == 0
-            {
-                self.loadingHide()
-                self.alertMissingText(mess: "Code is invalid. Login failed", textField: nil)
-            }
-            else
-            {
-                guard let text = fNameField.text?.trimmingCharacters(in: .whitespacesAndNewlines), text != "" else { return }
+            DispatchQueue.global(qos: .default).async(execute: {
+                let fNameField = alertInputCode.textFields![0] as UITextField
                 
-                let token = userDefault.object(forKey: TOKEN_STRING) as! String
-                
-                CodeType.getUniqueCodeInfo(code: text, completion: { (Code) in                    
+                if fNameField.text?.characters.count == 0
+                {
+                    self.loadingHide()
+                    self.alertMissingText(mess: "Code is invalid. Login failed", textField: nil)
+                }
+                else
+                {
+                    guard let text = fNameField.text?.trimmingCharacters(in: .whitespacesAndNewlines), text != "" else {return}
                     
-                    if Code != nil
-                    {
-                        var para = ["_method":"PATCH",
-                                    "type":Code!.tpye,
-                                    "organization": Code!.organization,
-                                    "student_class":Code!.Class,
-                                    "adviser":Code!.adviser]
+                    let token = userDefault.object(forKey: TOKEN_STRING) as! String
+                    
+                    CodeType.getUniqueCodeInfo(code: text, completion: { (Code) in
                         
-                        if user.profile.givenName != nil
+                        if Code != nil
                         {
-                            para.updateValue(user.profile.givenName, forKey: "first_name")
-                        }
-                        if user.profile.familyName != nil
-                        {
-                            para.updateValue(user.profile.familyName, forKey: "last_name")
-                        }
-                        if user.profile.email != nil
-                        {
-                            para.updateValue(user.profile.email, forKey: "email")
-                        }
-                        
-                        let header = ["Authorization":"Bearer \(token)"]
-                        
-                        print("PARA:--->", para)
-                        
-                        UserInfoAPI.updateUserProfile(para: para, header: header, picture: nil, completion: { (status) in
+                            var para = ["code":Code!.code,
+                                        "password": password]
                             
-                            if status
+                            if user.profile.givenName != nil
                             {
-                                LoginWithSocial.getUserInfoSocial(withToken: token, completion: { (result) in
-                                    
-                                    if result!["type"] as? String == UserType.assessor.rawValue
-                                    {
-                                        print(UserType.assessor.rawValue)
-                                        let assessor_homeVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "assessor_homeVC") as! Assessor_HomeVC
-                                        
-                                        assessor_homeVC.userInfomation = result!
-                                        assessor_homeVC.socialAvatar = user.profile.imageURL(withDimension: 500)
-                                        userDefault.set(GOOGLELOGIN, forKey: SOCIALKEY)
-                                        userDefault.synchronize()
-                                        
-                                        self.navigationController?.pushViewController(assessor_homeVC, animated: true)
-                                        
-                                    }
-                                    else
-                                    {
-                                        print(UserType.examinee.rawValue)
-                                        let examiner_homeVC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "examiner_homeVC") as! Examiner_HomeVC
-                                        
-                                        examiner_homeVC.userInfomation = result!
-                                        examiner_homeVC.socialAvatar = user.profile.imageURL(withDimension: 500)
-                                        userDefault.set(GOOGLELOGIN, forKey: SOCIALKEY)
-                                        userDefault.synchronize()
-                                        
-                                        self.navigationController?.pushViewController(examiner_homeVC, animated: true)
-                                    }
-                                    DispatchQueue.main.async {
-                                        self.loadingHide()
-                                    }
-                                    
-                                })
+                                para.updateValue(user.profile.givenName, forKey: "first_name")
                             }
-                            else
+                            if user.profile.familyName != nil
                             {
-                                print("UPDATE FAILED")
-                                DispatchQueue.main.async {
-                                    self.loadingHide()
+                                para.updateValue(user.profile.familyName, forKey: "last_name")
+                            }
+                            
+                            print("PARA:--->", para)
+                            
+                            LoginWithSocial.updateUserInfoSocial(userID: userID, para: para, completion: { (status:Bool?, code:Int?, data:NSDictionary?) in
+                                
+                                if status == true
+                                {
+                                    LoginWithSocial.getUserInfoSocial(withToken: token, completion: { (result) in
+                                        
+                                        if result!["type"] as? String == UserType.assessor.rawValue
+                                        {
+                                            print(UserType.assessor.rawValue)
+                                            let assessor_homeVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "assessor_homeVC") as! Assessor_HomeVC
+                                            
+                                            assessor_homeVC.userInfomation = result!
+                                            assessor_homeVC.socialAvatar = user.profile.imageURL(withDimension: 500)
+                                            userDefault.set(GOOGLELOGIN, forKey: SOCIALKEY)
+                                            userDefault.synchronize()
+                                            
+                                            self.navigationController?.pushViewController(assessor_homeVC, animated: true)
+                                            
+                                        }
+                                        else
+                                        {
+                                            print(UserType.examinee.rawValue)
+                                            let examiner_homeVC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "examiner_homeVC") as! Examiner_HomeVC
+                                            
+                                            examiner_homeVC.userInfomation = result!
+                                            examiner_homeVC.socialAvatar = user.profile.imageURL(withDimension: 500)
+                                            userDefault.set(GOOGLELOGIN, forKey: SOCIALKEY)
+                                            userDefault.synchronize()
+                                            
+                                            self.navigationController?.pushViewController(examiner_homeVC, animated: true)
+                                        }
+                                        DispatchQueue.main.async {
+                                            self.loadingHide()
+                                        }
+                                    })
                                 }
-                            }
-                            
-                        })
-                    }
-                    else
-                    {
-                        DispatchQueue.main.async {
-                            self.loadingHide()
-                            self.alertMissingText(mess: "Code is invalid.", textField: nil)
-                            
+                                else
+                                {
+                                    DispatchQueue.main.async {
+                                        guard let result = data else {return}
+                                        self.loadingHide()
+                                        self.alertMissingText(mess: result["error"] as! String, textField: nil)
+                                        
+                                    }
+                                    
+                                }
+                            })
                         }
-                    }
-                    
-                })
-            }
-          
+                            
+                        else
+                        {
+                            DispatchQueue.main.async {
+                                self.loadingHide()
+                                self.alertMissingText(mess: "Code is invalid. Login failed.", textField: nil)
+                                
+                            }
+                        }
+                        
+                    })
+                }
+            })
+   
         })
         alertInputCode.addTextField(configurationHandler: { (textField) -> Void in
             textField.placeholder = "Input Code"

@@ -24,6 +24,8 @@ class Part3VC: UIViewController {
     var minutes:Int!
     var seconds:Int!
 
+    let token = userDefault.object(forKey: TOKEN_STRING) as? String
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

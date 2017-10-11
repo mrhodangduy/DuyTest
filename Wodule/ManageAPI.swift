@@ -197,7 +197,7 @@ struct LoginWithSocial
         
         Alamofire.request(url!, method: HTTPMethod.post, parameters: parameter, encoding: URLEncoding.httpBody, headers: httpHeader).responseJSON(completionHandler: { (response) in
             
-            print("\nSTATUS CODE, RESULT", response.response!.statusCode, response.result)
+            print("\nSTATUS CODE, RESULT", response.response?.statusCode, response.result)
             
             if response.response?.statusCode == 200
             {
@@ -257,6 +257,32 @@ struct LoginWithSocial
             
         })
         
+    }
+    
+    static func updateUserInfoSocial(userID: Int, para: Parameters, completion: @escaping (Bool?, Int?, NSDictionary?) -> ())
+    {
+        let url = URL(string: APIURL.updateSocialInfoURL + "/\(userID)")
+        
+        Alamofire.request(url!, method: .post, parameters: para, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
+            
+            let json = response.result.value as? NSDictionary
+            
+            switch response.response!.statusCode
+            {
+            case 200:
+                
+                completion(true, response.response?.statusCode, json)
+                
+            case 400:
+                
+                completion(false, response.response?.statusCode, json)
+            default:
+                
+                completion(false, response.response?.statusCode, json)
+
+            }
+            
+        }
     }
 }
 
@@ -385,7 +411,7 @@ struct UserInfoAPI
             
             var status:Bool?
             
-            print("\n STATUS CODE, RESULT", response.response!.statusCode, response.result)
+            print("\n STATUS CODE, RESULT", response.response!.statusCode, response.result.description)
             
             if response.response?.statusCode == 200
             {
@@ -503,7 +529,6 @@ struct UserInfoAPI
             dateformat.dateFormat = "MM_DD_YY_hh:mm:ss"
             
             let fileURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(dateformat.string(from: Date())).appendingPathExtension("jpg")
-            
             
             if FileManager.default.fileExists(atPath: "\(fileURL!)")
             {

@@ -36,6 +36,12 @@ class Assessor_HomeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ExamRecord.getAllRecord(page: 1) { (result:[NSDictionary]?, totalPage) in
+            
+            
+        }
+        
+        
         if userDefault.object(forKey: SOCIALKEY) as? String != nil
         {
             socialIdentifier = userDefault.object(forKey: SOCIALKEY) as! String
@@ -154,7 +160,12 @@ class Assessor_HomeVC: UIViewController {
         }
         
         self.navigationController?.popToRootViewController(animated: true)
+
+        userDefault.removeObject(forKey: TOKEN_STRING)
         userDefault.removeObject(forKey: SOCIALKEY)
+        
+        AppDelegate.share.removeAllValueObject()
+        
         userDefault.synchronize()
     }
     

@@ -12,7 +12,59 @@ import SVProgressHUD
 
 extension UIViewController
 {
+    func listFilesFromDocumentsFolder() -> [String]?
+    {
+        let fileMngr = FileManager.default;
+        
+        // Full path to documents directory
+        let docs = fileMngr.urls(for: .documentDirectory, in: .userDomainMask)[0].path
+        
+        
+        // List all contents of directory and return as [String] OR nil if failed
+        return try? fileMngr.contentsOfDirectory(atPath:docs)
+        
+    }
+
     
+    func StarRecording(userID: Int, examID: Int, result: (_ audioURL: NSURL?) -> Void)
+    {
+        
+        AudioRecorderManager.shared.recored(fileName: "Recordby-\(userID)-\(examID)") { (status:Bool, audioURL:NSURL?) in
+            
+            if status == true
+            {
+                print("Did start recording")
+                
+            }
+            else
+            {
+                print("Error starting recorder")
+            }
+            
+            result(audioURL)
+
+        }
+        
+        
+   
+    }
+    
+    func stopRecord(audioURL:NSURL?)
+    {
+        AudioRecorderManager.shared.finishRecording()
+        
+        do
+        {
+            let data = try? Data(contentsOf: audioURL! as URL)
+            
+            print(data!)
+        }
+        catch
+        {
+            
+        }
+        
+    }
     
     func loadingShow()
     {

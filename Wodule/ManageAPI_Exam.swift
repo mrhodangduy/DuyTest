@@ -12,7 +12,7 @@ import Alamofire
 
 struct ExamRecord
 {
-    static func uploadExam(withToken token:String, idExam: Int, audiofile:Data?, completion: @escaping (Bool?, NSDictionary?) -> ())
+    static func uploadExam(withToken token:String, idExam: Int, audiofile: Data?, completion: @escaping (Bool?, NSDictionary?) -> ())
     {
         let url = URL(string: "http://wodule.io/api/exams/\(idExam)/records")
         
@@ -21,12 +21,21 @@ struct ExamRecord
        Alamofire.upload(multipartFormData: { (data) in
         
         let dateformat = DateFormatter()
-        dateformat.dateFormat = "MM_dd_YY_hh:mm:ss"
+        dateformat.dateFormat = "MM_dd_YY_hh_mm_ss"
         
-        if let datafile = audiofile
+        let uploadPath = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(dateformat.string(from: Date())).appendingPathExtension("m4a")
+        
+        
+        if let audioURL = audiofile
         {
-            data.append(datafile, withName: "audio", fileName: dateformat.string(from: Date()) + ".wav", mimeType: "audio/wav")
+            try? audioURL.write(to: uploadPath!, options: Data.WritingOptions.atomic)
+            data.append(uploadPath!, withName: "audio")
         }
+        else
+        {
+            completion(false, nil)
+        }
+        
         
        }, usingThreshold: 1, to: url!, method: .post, headers: httpHeader) { (results) in
         
@@ -57,4 +66,35 @@ struct ExamRecord
         }
             
     }
+    
+    static func getAllRecord(page: Int, completion: @escaping ([NSDictionary]?, _ totalPage: Int?) -> ())
+    {
+        let url = URL(string: APIURL.getAllrecordURL + "\(page)")
+        
+        Alamofire.request(url!).responseJSON { (response) in
+            
+            if response.result.isSuccess
+            {
+                let json = response.result.value as? NSDictionary
+                if let data = json?["data"] as? Array<NSDictionary>
+                {
+                    guard let meta = json?["meta"] as? NSDictionary, let pagination = meta["pagination"] as? NSDictionary, let total_pages = pagination["total_pages"] as? Int else {return}
+                    
+                    completion(data, total_pages)
+                    
+                }
+                else
+                {
+                    completion(nil, nil)
+                }
+            }
+            else
+            {
+                completion(nil, nil)
+            }
+            
+        }
+    }
+    
+        
 }

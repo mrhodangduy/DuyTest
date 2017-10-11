@@ -55,6 +55,7 @@
 		63D0FCCF1F85F2F8006347B0 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63D0FCCE1F85F2F8006347B0 /* Profile.storyboard */; };
 		63D0FCD21F861AC2006347B0 /* EditProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D0FCD11F861AC2006347B0 /* EditProfileCell.swift */; };
 		63D0FCD51F864A47006347B0 /* Examinee_HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D0FCD41F864A47006347B0 /* Examinee_HistoryCell.swift */; };
+		63F06ADC1F8E24FF00DDC7E2 /* Assessor_HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F06ADB1F8E24FF00DDC7E2 /* Assessor_HistoryCell.swift */; };
 		63F1459D1F8721E500CD03BF /* Examinee_CategoriesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F1459C1F8721E500CD03BF /* Examinee_CategoriesCell.swift */; };
 		63F1459F1F8721FA00CD03BF /* Examinee_CategoriesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F1459E1F8721FA00CD03BF /* Examinee_CategoriesVC.swift */; };
 		63F145A11F8732EE00CD03BF /* Part3_TempVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F145A01F8732EE00CD03BF /* Part3_TempVC.swift */; };
@@ -130,6 +131,7 @@
 		63D0FCCE1F85F2F8006347B0 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		63D0FCD11F861AC2006347B0 /* EditProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileCell.swift; sourceTree = "<group>"; };
 		63D0FCD41F864A47006347B0 /* Examinee_HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Examinee_HistoryCell.swift; sourceTree = "<group>"; };
+		63F06ADB1F8E24FF00DDC7E2 /* Assessor_HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assessor_HistoryCell.swift; sourceTree = "<group>"; };
 		63F1459C1F8721E500CD03BF /* Examinee_CategoriesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Examinee_CategoriesCell.swift; sourceTree = "<group>"; };
 		63F1459E1F8721FA00CD03BF /* Examinee_CategoriesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Examinee_CategoriesVC.swift; sourceTree = "<group>"; };
 		63F145A01F8732EE00CD03BF /* Part3_TempVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Part3_TempVC.swift; sourceTree = "<group>"; };
@@ -254,10 +256,10 @@
 				630BD8C01F8237AB00B24CA5 /* Define.swift */,
 				630BD8C61F82450600B24CA5 /* Extension.swift */,
 				DA7517BB1F82923B00E96E56 /* ManageAPI.swift */,
-				6347CF091F8C6FA5009D717D /* AuthInstagram.swift */,
-				63F145A41F8772E900CD03BF /* Wodule-Bridging-Header.h */,
 				6347CF0B1F8CB687009D717D /* ManageAPI_Exam.swift */,
+				6347CF091F8C6FA5009D717D /* AuthInstagram.swift */,
 				DA1620761F8D16200056D7D3 /* AudioRecorderManager.swift */,
+				63F145A41F8772E900CD03BF /* Wodule-Bridging-Header.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -376,6 +378,7 @@
 				DAAD6B4C1F8530B700F45371 /* Assessor_Part3Cell.swift */,
 				DAAD6B4E1F8530C600F45371 /* Assessor_Part4Cell.swift */,
 				DAAD6B501F8530DD00F45371 /* Assessor_OverViewCell.swift */,
+				63F06ADB1F8E24FF00DDC7E2 /* Assessor_HistoryCell.swift */,
 			);
 			name = Assessor;
 			sourceTree = "<group>";
@@ -589,6 +592,7 @@
 				DA7560991F83F874008DB772 /* Part2VC.swift in Sources */,
 				6347CF0A1F8C6FA5009D717D /* AuthInstagram.swift in Sources */,
 				DA7560A11F83F8A5008DB772 /* EndVC.swift in Sources */,
+				63F06ADC1F8E24FF00DDC7E2 /* Assessor_HistoryCell.swift in Sources */,
 				630BD8A41F81DC8700B24CA5 /* UIViewX.swift in Sources */,
 				630BD89C1F81DC8700B24CA5 /* TextFieldMaxLength.swift in Sources */,
 				DA7560931F83F83B008DB772 /* AssessmentHistoryVC.swift in Sources */,

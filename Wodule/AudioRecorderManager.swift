@@ -59,29 +59,28 @@ class AudioRecorderManager: NSObject {
     }
     
     var meterTimer:Timer?
-    func recored(fileName:String,result:(_ isRecording:Bool)->Void) {
+    
+    func recored(fileName:String,result:(_ isRecording:Bool, _ audioURL: NSURL?)->Void) {
         
         let path = getUserDocumentsPath().appendingPathComponent(fileName+".m4a")
         
         let audioURL = NSURL(fileURLWithPath: path.path)
-        
-        
+
+       
         let recoredSt:[String:Any] = [
             AVFormatIDKey:NSNumber(value: kAudioFormatAppleLossless),
-            AVEncoderAudioQualityKey : AVAudioQuality.high.rawValue,
+            AVEncoderAudioQualityKey : AVAudioQuality.max.rawValue,
             AVEncoderBitRateKey : 12000.0,
             AVNumberOfChannelsKey: 1,
-            AVSampleRateKey : 44100.0            
+            AVSampleRateKey : 44100.0
         ]
-        
-        
         
         do {
             recorder = try AVAudioRecorder(url: audioURL as URL, settings: recoredSt)
             recorder?.delegate = self
             
             recorder?.isMeteringEnabled = true
-            recorder?.prepareToRecord()
+//            recorder?.prepareToRecord()
             
             recorder?.record()
             
@@ -91,11 +90,11 @@ class AudioRecorderManager: NSObject {
                                                    selector:#selector(AudioRecorderManager.updateAudioMeter(timer:)),
                                                    userInfo:nil,
                                                    repeats:true)
-            result(true)
+            result(true, audioURL)
             print("Recording")
             
         } catch {
-            result(false)
+            result(false, nil)
         }
     }
     
@@ -123,10 +122,14 @@ class AudioRecorderManager: NSObject {
     }
    
     
-    func finishRecording(){
+    func finishRecording()
+    {
         
         self.recorder?.stop()
         self.meterTimer?.invalidate()
+        
+        
+
     }
    
     

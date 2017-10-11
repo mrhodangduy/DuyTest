@@ -14,6 +14,7 @@ import FBSDKCoreKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    static var share = AppDelegate()
 
     func removeAllValueObject()
     {
@@ -43,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         userDefault.removeObject(forKey: PASSWORD_STRING)
         userDefault.removeObject(forKey: CODE_STRING)
         userDefault.removeObject(forKey: NOTIFI_ERROR)
+        userDefault.removeObject(forKey: USERID_STRING)
         userDefault.synchronize()
     }
     

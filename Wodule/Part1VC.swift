@@ -30,37 +30,20 @@ class Part1VC: UIViewController {
     var minutes:Int!
     var seconds:Int!
     
-    
-    func StarRecording()
-    {
-       
-        let dateformat = DateFormatter()
-        dateformat.dateFormat = "MM_dd_YY_hh_mm_ss"
-        
-        AudioRecorderManager.shared.recored(fileName: dateformat.string(from: Date())) { (status:Bool) in
-            
-            if status == true
-            {
-                print("Did start recording")
-            }
-            else
-            {
-                print("Error starting recorder")
-            }
-        }
-    }
-    func stopRecord()
-    {
-        AudioRecorderManager.shared.finishRecording()
-    }
+    let token = userDefault.object(forKey: TOKEN_STRING) as? String
+    let userID = userDefault.object(forKey: USERID_STRING) as? Int
+    var examID:Int!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        AudioRecorderManager.shared.recorder?.prepareToRecord()
+        
         tv_Data.font = UIFont.systemFont(ofSize: fontSizeDefaultTV)
         
-        let index = Exam.index(where: { $0.number == 1 })
-        print(Exam[index!])
+        guard let index = Exam.index(where: { $0.number == 1 }) else { return }
+        print(Exam[index])
+        examID = Exam[index].identifier
         
         circleTime.circleTimerWidth = 2
         circleTime.circleBackgroundColor = .clear
@@ -70,7 +53,7 @@ class Part1VC: UIViewController {
         image_Question.isHidden = true
         tv_Data.isHidden = true
         
-        if Exam[index!].photo != nil
+        if Exam[index].photo != nil
         {
             lbl_Title.text = TITLEPHOTO
             image_Question.isHidden = false
@@ -80,7 +63,7 @@ class Part1VC: UIViewController {
             image_Question.sd_setIndicatorStyle(.white)
             image_Question.sd_showActivityIndicatorView()
             image_Question.sd_setShowActivityIndicatorView(true)
-            image_Question.sd_setImage(with: URL(string: Exam[index!].photo!), placeholderImage: nil, options: [.continueInBackground]) { (iamge, error, type, url) in
+            image_Question.sd_setImage(with: URL(string: Exam[index].photo!), placeholderImage: nil, options: [.continueInBackground]) { (iamge, error, type, url) in
                 
                 self.circleTime.start(withSeconds: timeInitial)
                 
@@ -91,7 +74,7 @@ class Part1VC: UIViewController {
         {
             lbl_Title.text = TITLESTRING
             tv_Data.isHidden = false
-            tv_Data.text = Exam[index!].questioner!
+            tv_Data.text = Exam[index].questioner!
             circleTime.start(withSeconds: timeInitial)
             
         }
@@ -153,33 +136,45 @@ class Part1VC: UIViewController {
         if FileManager.default.fileExists(atPath: url.path)
         {
             print("File found and ready to play")
-            print(listFilesFromDocumentsFolder())
+            print(listFilesFromDocumentsFolder()!)
+            print(url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a"))
+            
+            let audioURL = url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a")
+            
+            let data: Data?
+            do
+            {
+                data = try? Data(contentsOf: audioURL)
+            }
+            catch
+            {
+                
+            }
+            
+            ExamRecord.uploadExam(withToken: token!, idExam: examID, audiofile: data) { (status:Bool?, result:NSDictionary?) in
+                
+                print("UPLOAD DONE")
+            }
+
         }
         else
         {
-            print("Nofile")
+            print("No file")
         }
         
         self.navigationController?.pushViewController(part2VC, animated: true)
     }
-    func listFilesFromDocumentsFolder() -> [String]?
-    {
-        let fileMngr = FileManager.default;
         
-        // Full path to documents directory
-        let docs = fileMngr.urls(for: .documentDirectory, in: .userDomainMask)[0].path
-        
-        // List all contents of directory and return as [String] OR nil if failed
-        return try? fileMngr.contentsOfDirectory(atPath:docs)
-    }
-    
 }
 
 extension Part1VC: JWGCircleCounterDelegate
 {
     func circleCounterTimeDidExpire(_ circleCounter: JWGCircleCounter!) {
     
-        self.StarRecording()
+        var audioURL:NSURL?
+        self.StarRecording(userID: userID!, examID: examID) { (audioURLs:NSURL?) in
+            audioURL = audioURLs
+        }
         
         lbl_CountdownTime.isHidden = false
         createrCountdownTimer()
@@ -188,7 +183,7 @@ extension Part1VC: JWGCircleCounterDelegate
             self.view.layoutIfNeeded()
         }) { (done) in
             self.nextBtn.isHidden = false
-            self.stopRecord()
+            self.stopRecord(audioURL: audioURL)
         }
         
     }

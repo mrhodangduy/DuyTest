@@ -33,10 +33,7 @@ class Examiner_HomeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
-        
-        
+                
         if userDefault.object(forKey: SOCIALKEY) as? String != nil
         {
             socialIdentifier = userDefault.object(forKey: SOCIALKEY) as! String
@@ -51,7 +48,7 @@ class Examiner_HomeVC: UIViewController {
         
         asignDataInView()
         
-        userDefault.set(userInfomation["id"] as! Int, forKey: USER_STRING)
+        userDefault.set(userInfomation["id"] as! Int, forKey: USERID_STRING)
         userDefault.synchronize()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.logOut))
@@ -160,6 +157,9 @@ class Examiner_HomeVC: UIViewController {
 
         self.navigationController?.popToRootViewController(animated: true)
         userDefault.removeObject(forKey: SOCIALKEY)
+        userDefault.removeObject(forKey: TOKEN_STRING)
+        AppDelegate.share.removeAllValueObject()
+
         userDefault.synchronize()
     }
     

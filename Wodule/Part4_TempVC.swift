@@ -24,10 +24,17 @@ class Part4_TempVC: UIViewController {
     
     var expectTime:TimeInterval = timeCoutdown
     var Exam = [CategoriesExam]()
+    
+    let token = userDefault.object(forKey: TOKEN_STRING) as? String
+    
+    let userID = userDefault.object(forKey: USERID_STRING) as? Int
+    var examID:Int!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        AudioRecorderManager.shared.recorder?.prepareToRecord()
+
         tv_Data.font = UIFont.systemFont(ofSize: fontSizeDefaultTV)
         
         circleTime.circleBackgroundColor = .clear
@@ -37,12 +44,14 @@ class Part4_TempVC: UIViewController {
         recordingMess.isHidden = true
         nextBtn.isHidden = true
         
-        let index = Exam.index(where: { $0.number == 4 })
-        print(Exam[index!])
+        guard let index = Exam.index(where: { $0.number == 4 }) else { return }
+        print(Exam[index])
+        examID = Exam[index].identifier
+        
         img_Photo.isHidden = true
         tv_Data.isHidden = true
         
-        if Exam[index!].photo != nil
+        if Exam[index].photo != nil
         {
             lbl_Title.text = TITLEPHOTO
             img_Photo.isHidden = false
@@ -52,7 +61,7 @@ class Part4_TempVC: UIViewController {
             img_Photo.sd_setIndicatorStyle(.white)
             img_Photo.sd_showActivityIndicatorView()
             img_Photo.sd_setShowActivityIndicatorView(true)
-            img_Photo.sd_setImage(with: URL(string: Exam[index!].photo!), placeholderImage: nil, options: [.continueInBackground]) { (iamge, error, type, url) in
+            img_Photo.sd_setImage(with: URL(string: Exam[index].photo!), placeholderImage: nil, options: [.continueInBackground]) { (iamge, error, type, url) in
                 
                 self.circleTime.start(withSeconds: timeInitial)
                 
@@ -63,7 +72,7 @@ class Part4_TempVC: UIViewController {
         {
             lbl_Title.text = TITLESTRING
             tv_Data.isHidden = false
-            tv_Data.text = Exam[index!].questioner!
+            tv_Data.text = Exam[index].questioner!
             circleTime.start(withSeconds: timeInitial)
             
         }
@@ -89,6 +98,37 @@ class Part4_TempVC: UIViewController {
     @IBAction func nextBtnTap(_ sender: Any) {
         
         let endVC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "endassessmentVC") as! EndVC
+        
+        let url  = AudioRecorderManager.shared.getUserDocumentsPath()
+        print("File LOcation:", url.path)
+        
+        if FileManager.default.fileExists(atPath: url.path)
+        {
+            print("File found and ready to play")
+            print(listFilesFromDocumentsFolder()!)
+            print(url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a"))
+        }
+        else
+        {
+            print("No file")
+        }
+
+        let audioURL = url.appendingPathComponent("Recordby-\(userID!)-\(examID!)").appendingPathExtension("m4a")
+        let data: Data?
+        do
+        {
+            data = try? Data(contentsOf: audioURL)
+        }
+        catch
+        {
+            
+        }
+        
+        ExamRecord.uploadExam(withToken: token!, idExam: examID, audiofile: data) { (status:Bool?, result:NSDictionary?) in
+            
+            print("UPLOAD DONE")
+        }
+        
         self.navigationController?.pushViewController(endVC, animated: true)
     }
     
@@ -98,6 +138,11 @@ extension Part4_TempVC: JWGCircleCounterDelegate
 {
     func circleCounterTimeDidExpire(_ circleCounter: JWGCircleCounter!) {
         
+        var audioURL:NSURL?
+        self.StarRecording(userID: userID!, examID: examID) { (audioURLs:NSURL?) in
+            audioURL = audioURLs
+        }
+        
         self.recordingMess.isHidden = false
         UIView.animate(withDuration: expectTime, animations: {
             self.viewBackground.frame.size.width = self.containerView.frame.size.width
@@ -105,6 +150,7 @@ extension Part4_TempVC: JWGCircleCounterDelegate
         }, completion: { (done) in
             self.recordingMess.text = "DONE"
             self.nextBtn.isHidden = false
+            self.stopRecord(audioURL: audioURL)
         })
         
     }
