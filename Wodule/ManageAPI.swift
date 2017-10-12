@@ -771,18 +771,29 @@ struct AssesmentHistory
             if response.response?.statusCode == 200
             {
                 let json = response.result.value as? [String:AnyObject]
+                print(json)
                 if let data = json?["data"] as? [[String:AnyObject]]
                 {
-                    guard let meta = json?["meta"] as? NSDictionary, let pagination = meta["pagination"] as? NSDictionary, let total_pages = pagination["total_pages"] as? Int else {return}
-                    
-                    for item in data
+                    print(data)
+                    if data.count != 0
                     {
-                        if let history = try? AssesmentHistory(json: item)
+                        guard let meta = json?["meta"] as? NSDictionary, let pagination = meta["pagination"] as? NSDictionary, let total_pages = pagination["total_pages"] as? Int else {return}
+                        
+                        for item in data
                         {
-                            result.append(history)
+                            if let history = try? AssesmentHistory(json: item)
+                            {
+                                result.append(history)
+                            }
                         }
+                        completion(true,nil, result, total_pages)
                     }
-                    completion(true,nil, result, total_pages)
+                    else
+                    {
+                        result = []
+                        completion(true,nil, result, 1)
+                    }
+                    
                 }
                 else
                 {

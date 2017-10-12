@@ -36,21 +36,30 @@ class AssessmentHistoryVC: UIViewController {
             
             if status!
             {
-                print("\n\nHISTORY LIST:--->\n",results!)
-                self.totalPage = totalpage
-                for result in results!
+                if results?.count != 0
                 {
-                    self.History.insert(result, at: 0)
+                    print("\n\nHISTORY LIST:--->\n",results!)
+                    self.totalPage = totalpage
+                    for result in results!
+                    {
+                        self.History.insert(result, at: 0)
+                        DispatchQueue.main.async(execute: {
+                            self.loadingHide()
+                            self.dataTableView.reloadData()
+                            
+                        })
+                        
+                    }
+                }
+                else
+                {
                     DispatchQueue.main.async(execute: {
                         self.loadingHide()
                         self.dataTableView.reloadData()
-                        if self.History.count == 0
-                        {
-                            self.lbl_NoFound.isHidden = false
-                        }
+                        self.lbl_NoFound.isHidden = false
                     })
-
                 }
+                
                 
             }
             else
