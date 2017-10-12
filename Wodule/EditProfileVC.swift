@@ -60,18 +60,41 @@ class EditProfileVC: UIViewController {
         
         print("\nEDIT USER INFO:-->\n" , userInfo)
         
-        tf_Email.isUserInteractionEnabled = false
-        
         dataTableView.delegate = self
         dataTableView.dataSource = self
         
         showDatePicker()
+        setDataOnView()
+        checkEmailAvailable()
+    }
+    
+    func checkEmailAvailable()
+    {
+        tf_Email.isUserInteractionEnabled = false
+        print("EMAIL TF:->", tf_Email.isUserInteractionEnabled)
         
+        if ((userInfo["email"] as? String) == nil)
+        {
+            tf_Email.isUserInteractionEnabled = true
+            tf_Email.textColor = .black
+            print("EMAIL TF true:->", tf_Email.isUserInteractionEnabled)
+        }
+        else
+        {
+            tf_Email.isUserInteractionEnabled = false
+            tf_Email.textColor = .darkGray
+            print("EMAIL TF False:->", tf_Email.isUserInteractionEnabled)
+        }
+
+    }
+    
+    func setDataOnView()
+    {
         if userInfo["type"] as? String != nil
         {
             lbb_Type.text = "Type: " + (userInfo["type"] as! String).uppercased()
         }
-        
+            
         else
         {
             lbb_Type.text = "Type: Undefine"
@@ -90,7 +113,7 @@ class EditProfileVC: UIViewController {
         
         switch socialIdentifier {
             
-        case GOOGLELOGIN, FACEBOOKLOGIN:
+        case GOOGLELOGIN, FACEBOOKLOGIN, INSTAGRAMLOGIN:
             
             if userInfo["picture"] as! String == "http://wodule.io/user/default.jpg"
             {
@@ -100,29 +123,12 @@ class EditProfileVC: UIViewController {
             {
                 img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo["picture"] as! String), placeholderImage: nil, options: [], progress: nil, completed: nil)
             }
-        
-        case INSTAGRAMLOGIN:
-            
-            if userInfo["picture"] as! String == "http://wodule.io/user/default.jpg"
-            {
-                img_Avatar.sd_setImageWithPreviousCachedImage(with: socialAvatar, placeholderImage: nil, options: [], progress: nil, completed: nil)
-            }
-            else
-            {
-                img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo["picture"] as! String), placeholderImage: nil, options: [], progress: nil, completed: nil)
-            }
-            
-            if (tf_Email.text?.characters.count)! == 0
-            {
-                tf_Email.isUserInteractionEnabled = true
-            }
-                        
             
         default:
             
             img_Avatar.sd_setImageWithPreviousCachedImage(with: URL(string: userInfo["picture"] as! String), placeholderImage: nil, options: [], progress: nil, completed: nil)
         }
-
+        
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleGetImage))
         img_Avatar.addGestureRecognizer(tapGesture)
@@ -162,7 +168,6 @@ class EditProfileVC: UIViewController {
             lastname_first.setImage(#imageLiteral(resourceName: "ic_tick"), for: .normal)
             isTicked = false
         }
-        
     }
     
     func configViewData(number: Int)
@@ -356,7 +361,7 @@ class EditProfileVC: UIViewController {
         else if isTicked! == false && userInfo["ln_first"] as? String == "Yes"
         {
             para.updateValue("No", forKey: "ln_first")
-
+            
         }
         else
         {
@@ -426,6 +431,10 @@ class EditProfileVC: UIViewController {
         {
             para.updateValue(tf_Gender.text!, forKey: "gender")
         }
+        if (tf_Email.text?.characters.count)! > 0 && tf_Email.text! != userInfo["email"] as? String
+        {
+            para.updateValue(tf_Email.text!, forKey: "email")
+        }
         
         print("\nPARA UPDATED:\n------>", para)
         
@@ -438,7 +447,9 @@ class EditProfileVC: UIViewController {
         createPara_Header()
         loadingShow()
         DispatchQueue.global(qos: .default).async {
-            UserInfoAPI.updateUserProfile(para: self.para, header: self.header, picture: self.imgData, completion: { (status) in
+            UserInfoAPI.updateUserProfile(para: self.para, header: self.header, picture: self.imgData, completion: { (status:Bool, code: Int?, result:NSDictionary?) in
+                
+                print(code!)
                 
                 if status
                 {
@@ -451,16 +462,47 @@ class EditProfileVC: UIViewController {
                 }
                 else
                 {
-                    DispatchQueue.main.async(execute: {
-                        print("UPDATE FAILED")
-                        self.loadingHide()
-                        self.alertMissingText(mess: "Failure while updating your profile. Try again.", textField: nil)
-                    })
+                    
+                    if code! == 422
+                    {
+                        
+                        let errorMess = result?["error"] as? String
+                        if errorMess != nil
+                        {
+                            DispatchQueue.main.async(execute: {
+                                print("UPDATE FAILED")
+                                self.loadingHide()
+                                self.alertMissingText(mess: "You need to specify a different value to update", textField: nil)
+                            })
+
+                        }
+                        else
+                        {
+                            DispatchQueue.main.async(execute: {
+                                print("UPDATE FAILED")
+                                self.loadingHide()
+                                self.alertMissingText(mess: "The email has already been taken.", textField: self.tf_Email)
+                            })
+                        }
+                        
+                    }
+                    else
+                    {
+                        DispatchQueue.main.async(execute: {
+                            print("UPDATE FAILED")
+                            self.loadingHide()
+                            self.alertMissingText(mess: "Failure while updating your profile. Try again.", textField: nil)
+                            self.perform(#selector(self.backBtnTap(_:)), with: self, afterDelay: 3)
+                        })
+                    }
+                    
+                    
                 }
             })
         }
         
     }
+    
     
     @IBAction func backBtnTap(_ sender: Any) {
         

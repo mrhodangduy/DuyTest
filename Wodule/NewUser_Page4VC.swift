@@ -209,7 +209,7 @@ class NewUser_Page4VC: UIViewController {
                         
                         DispatchQueue.main.async(execute: { 
                             self.loadingHide()
-                            print("REGISTER AND LOGIN SUCCESSFUL, REDIRECT TO:-->", (userInfo?["type"] as? String)?.uppercased())
+                            print("REGISTER AND LOGIN SUCCESSFUL, REDIRECT TO:-->", (userInfo?["type"] as? String)?.uppercased() as Any)
                         })
                         
                     })

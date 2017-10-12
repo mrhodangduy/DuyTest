@@ -64,13 +64,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initialize sign-in  FB
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
-        print("Simulator path",FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0])
+        print("\n\nSimulator path",FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0])
         AudioRecorderManager.shared.setup()
         
         return true
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        print("\nURL SCHEME:->",url.scheme as Any)
         
         if url.scheme?.hasPrefix("fb") == true {
             

@@ -54,13 +54,14 @@ struct ExamRecord
         case .success(request: let upload, streamingFromDisk: _, streamFileURL: _):
             
             upload.uploadProgress(closure: { (progress) in
-                print("PROGRESS UPLOAD:--->", progress.fractionCompleted)
+                print("PROGRESS UPLOAD:--->", (progress.fractionCompleted * 100))
                 
             })
             
             upload.responseJSON(completionHandler: { (response) in
                 
                 guard let json = response.result.value as? NSDictionary else {return}
+                print(json)
                 
                 if response.result.isSuccess
                 {

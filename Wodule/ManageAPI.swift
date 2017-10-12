@@ -10,52 +10,6 @@ import Foundation
 import Alamofire
 import SVProgressHUD
 
-struct InstagramAPI
-{
-    static let INSTAGRAM_AUTHURL = "https://api.instagram.com/oauth/authorize/"
-    static let INSTAGRAM_APIURl = "https://api.instagram.com/v1/users/"
-    static let INSTAGRAM_CLIENT_ID = "c241ecb5bd874465ad80deb0398fb828"
-    static let INSTAGRAM_CLIENTSERCRET = "9561f1054d27482dbd73aa3e7c60b0f4"
-    static let INSTAGRAM_REDIRECT_URI = "http://wodule.io/api/redirectIG"
-    static let INSTAGRAM_ACCESS_TOKEN = "access_token"
-    static let INSTAGRAM_SCOPE = "public_content" /* add whatever scope you need https://www.instagram.com/developer/authorization/ */
-    
-    
-    static func getIDIntergram(_ token: String, complete:@escaping (NSDictionary?, Bool?) ->()) {
-        Alamofire.request("https://api.instagram.com/v1/users/self/?access_token=\(token)").responseJSON { (response) in
-            
-            print(response.result.value!)
-            
-            switch(response.result) {
-            case .success(_):
-                guard let value = response.result.value else {
-                    complete(nil, true)
-                    return
-                }
-                if let json = value as? NSDictionary {
-                    
-                    complete(json, nil)
-                }
-                    
-                else
-                {
-                    complete(nil, true)
-                    return
-                }
-                
-                complete(nil, true)
-                
-                
-            case .failure(let error):
-                print(error)
-                complete(nil, true)
-                
-            }
-        }
-    }
-}
-
-
 
 struct CodeType
 {
@@ -197,7 +151,7 @@ struct LoginWithSocial
         
         Alamofire.request(url!, method: HTTPMethod.post, parameters: parameter, encoding: URLEncoding.httpBody, headers: httpHeader).responseJSON(completionHandler: { (response) in
             
-            print("\nSTATUS CODE, RESULT", response.response?.statusCode, response.result)
+            print("\nSTATUS CODE, RESULT", response.response?.statusCode as Any, response.result)
             
             if response.response?.statusCode == 200
             {
@@ -452,7 +406,7 @@ struct UserInfoAPI
             }
                 
             else{
-                print("\nPICTURE DATA:------>", picture)
+                print("\nPICTURE DATA:------>", picture as Any)
             }
             
             for (key, value) in para {
@@ -518,7 +472,7 @@ struct UserInfoAPI
     }
     
     
-    static func updateUserProfile(para: Parameters,header: HTTPHeaders,picture: Data?, completion: @escaping (Bool) -> ())
+    static func updateUserProfile(para: Parameters,header: HTTPHeaders,picture: Data?, completion: @escaping (Bool,Int?,NSDictionary?) -> ())
     {
         let url = URL(string: APIURL.updateProfileURL)
         
@@ -526,7 +480,7 @@ struct UserInfoAPI
             
                         
             let dateformat = DateFormatter()
-            dateformat.dateFormat = "MM_DD_YY_hh:mm:ss"
+            dateformat.dateFormat = "MM_DD_YY_hh_mm_ss"
             
             let fileURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(dateformat.string(from: Date())).appendingPathExtension("jpg")
             
@@ -564,23 +518,27 @@ struct UserInfoAPI
                     
                 })
                 
-                upload.response(completionHandler: { (respone) in
-                    
-                    print(respone.response)
-                    
-                })
-                
                 upload.responseJSON(completionHandler: { (response) in
                     
-                    print(response.description)
-                    print(response.result.value)
-                    completion(true)
+                    guard let json = response.result.value as? NSDictionary else { return }
+                    
+                    print(response.result)
+                    print(json)
+                    if response.response?.statusCode == 200
+                    {
+                        completion(true, response.response?.statusCode, json)
+                    }
+                    else
+                    {
+                        completion(false, response.response?.statusCode, json)
+                    }
+
                 })
                 
                 
             case . failure(let error):
                 print(error.localizedDescription)
-                completion(false)
+                completion(false, nil, nil)
             }
             
             
@@ -801,9 +759,9 @@ struct AssesmentHistory
         
     }
     
-    static func getUserHistory(withToken token: String, userID: Int, completion: @escaping (Bool?,AnyObject?,[AssesmentHistory]?) -> ())
+    static func getUserHistory(withToken token: String, userID: Int,page: Int, completion: @escaping (Bool?,AnyObject?,[AssesmentHistory]?,Int?) -> ())
     {
-        let url = URL(string: "http://wodule.io/api/users/\(userID)/records")
+        let url = URL(string: "http://wodule.io/api/users/\(userID)/records?page=\(page)")
         let httpHeader:HTTPHeaders = ["Authorization":"Bearer \(token)"]
         
         Alamofire.request(url!, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.httpBody, headers: httpHeader).responseJSON { (response) in
@@ -815,6 +773,8 @@ struct AssesmentHistory
                 let json = response.result.value as? [String:AnyObject]
                 if let data = json?["data"] as? [[String:AnyObject]]
                 {
+                    guard let meta = json?["meta"] as? NSDictionary, let pagination = meta["pagination"] as? NSDictionary, let total_pages = pagination["total_pages"] as? Int else {return}
+                    
                     for item in data
                     {
                         if let history = try? AssesmentHistory(json: item)
@@ -822,25 +782,25 @@ struct AssesmentHistory
                             result.append(history)
                         }
                     }
-                    completion(true,nil, result)
+                    completion(true,nil, result, total_pages)
                 }
                 else
                 {
                     result = []
                     
-                    completion(false,response.result.value as? NSDictionary , result)
+                    completion(false,response.result.value as? NSDictionary , result, 1)
                 }
             }
             else if response.response?.statusCode == 401
             {
                 result = []
-                completion(false,response.result.value as? NSDictionary, result)
+                completion(false,response.result.value as? NSDictionary, result, 1)
                 
             }
             else
             {
                 result = []
-                completion(false,response.result.value as? NSDictionary, result)
+                completion(false,response.result.value as? NSDictionary, result, 1)
                 
             }
             

@@ -31,8 +31,8 @@ class LoginVC: UIViewController {
         super.viewWillAppear(animated)
         super.navigationController?.isNavigationBarHidden = true
         
-        print(userDefault.object(forKey: TOKEN_STRING) as? String)
-        print(userDefault.object(forKey: SOCIALKEY) as? String)
+        print(userDefault.object(forKey: TOKEN_STRING) as? String as Any)
+        print(userDefault.object(forKey: SOCIALKEY) as? String as Any)
 
     }
     
@@ -285,48 +285,66 @@ class LoginVC: UIViewController {
                             let token = userDefault.object(forKey: TOKEN_STRING) as? String
                             LoginWithSocial.getUserInfoSocial(withToken: token!, completion: { (result) in
                                 
-                                print(result!)
-                                
-                                guard let userID = result?["id"] as? Int else { return }
-                                
-                                if result!["type"] as? String == UserType.assessor.rawValue
+                                print(result as Any)
+                                if result != nil
                                 {
-                                    let assessor_homeVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "assessor_homeVC") as! Assessor_HomeVC
                                     
-                                    assessor_homeVC.userInfomation = result
-                                    if profile_picture != nil
+                                    guard let userID = result?["id"] as? Int else { return }
+                                    
+                                    if result!["type"] as? String == UserType.assessor.rawValue
                                     {
-                                        assessor_homeVC.socialAvatar = URL(string: profile_picture!)
+                                        
+                                        let assessor_homeVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "assessor_homeVC") as! Assessor_HomeVC
+                                        
+                                        assessor_homeVC.userInfomation = result
+                                        if profile_picture != nil
+                                        {
+                                            assessor_homeVC.socialAvatar = URL(string: profile_picture!)
+                                        }
+                                        userDefault.set(INSTAGRAMLOGIN, forKey: SOCIALKEY)
+                                        userDefault.synchronize()
+                                        
+                                        self.navigationController?.pushViewController(assessor_homeVC, animated: true)
+                                        
+                                        DispatchQueue.main.async {
+                                            self.loadingHide()
+                                        }
                                     }
-                                    userDefault.set(INSTAGRAMLOGIN, forKey: SOCIALKEY)
-                                    userDefault.synchronize()
-                                    
-                                    self.navigationController?.pushViewController(assessor_homeVC, animated: true)
-                                }
-                                else if result!["type"] as? String == UserType.examinee.rawValue
-                                {
-                                    let examiner_homeVC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "examiner_homeVC") as! Examiner_HomeVC
-                                    
-                                    examiner_homeVC.userInfomation = result
-                                    if profile_picture != nil
+                                    else if result!["type"] as? String == UserType.examinee.rawValue
                                     {
-                                        examiner_homeVC.socialAvatar = URL(string: profile_picture!)
+                                        let examiner_homeVC = UIStoryboard(name: EXAMINEE_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "examiner_homeVC") as! Examiner_HomeVC
+                                        
+                                        examiner_homeVC.userInfomation = result
+                                        if profile_picture != nil
+                                        {
+                                            examiner_homeVC.socialAvatar = URL(string: profile_picture!)
+                                        }
+                                        userDefault.set(INSTAGRAMLOGIN, forKey: SOCIALKEY)
+                                        userDefault.synchronize()
+                                        self.navigationController?.pushViewController(examiner_homeVC, animated: true)
+                                        
+                                        DispatchQueue.main.async {
+                                            self.loadingHide()
+                                        }
+                                        
                                     }
-                                    userDefault.set(INSTAGRAMLOGIN, forKey: SOCIALKEY)
-                                    userDefault.synchronize()
-                                    self.navigationController?.pushViewController(examiner_homeVC, animated: true)
-                                    
+                                    else
+                                    {
+                                        print("Missing Code")
+                                        DispatchQueue.main.async {
+                                            self.loadingHide()
+                                        }
+                                        self.createAlert(fullname: name!, avatarLink: profile_picture!, password: password, userID: userID)
+                                        
+                                    }
+
                                 }
                                 else
                                 {
-                                    print("Missing Code")
-                                    
-                                    self.createAlert(fullname: name!, avatarLink: profile_picture!, password: password, userID: userID)
-                                    
-                                }
-                                
-                                DispatchQueue.main.async {
-                                    self.loadingHide()
+                                    DispatchQueue.main.async(execute: { 
+                                        self.loadingHide()
+                                        self.alertMissingText(mess: "Wrong to get your info.Try again.", textField: nil)
+                                    })
                                 }
                                 
                             })

@@ -25,8 +25,10 @@ extension LoginVC : GIDSignInDelegate, GIDSignInUIDelegate
             
             LoginWithSocial.LoginUserWithSocial(username: username, password: password, completion: { (first, status) in
                 
+                
                 if status!
                 {
+                    
                     let token = userDefault.object(forKey: TOKEN_STRING) as? String
                     
                     LoginWithSocial.getUserInfoSocial(withToken: token!, completion: { (result) in
@@ -53,6 +55,7 @@ extension LoginVC : GIDSignInDelegate, GIDSignInUIDelegate
                             examiner_homeVC.socialAvatar = user.profile.imageURL(withDimension: 500)
                             userDefault.set(GOOGLELOGIN, forKey: SOCIALKEY)
                             userDefault.synchronize()
+                            
                             self.navigationController?.pushViewController(examiner_homeVC, animated: true)
                             
                         }

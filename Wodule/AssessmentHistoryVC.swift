@@ -15,6 +15,8 @@ class AssessmentHistoryVC: UIViewController {
     var History = [AssesmentHistory]()
     let token = userDefault.object(forKey: TOKEN_STRING) as? String
     var userID:Int!
+    var currentpage:Int!
+    var totalPage:Int!
     
     
     @IBOutlet weak var dataTableView: UITableView!
@@ -22,36 +24,49 @@ class AssessmentHistoryVC: UIViewController {
         super.viewDidLoad()
         
         lbl_NoFound.isHidden = true
+        lbl_NoFound.text = "No Assessment Found"
         
         dataTableView.dataSource = self
         dataTableView.delegate = self
         
+        currentpage = 1
         
         loadingShow()
-        AssesmentHistory.getUserHistory(withToken: token!, userID: userID) { (status,mess, results) in
+        AssesmentHistory.getUserHistory(withToken: token!, userID: userID, page: currentpage) { (status,mess, results, totalpage) in
             
             if status!
             {
                 print("\n\nHISTORY LIST:--->\n",results!)
-                self.History = results!
-                DispatchQueue.main.async(execute: {
-                    self.loadingHide()
-                    self.dataTableView.reloadData()
-                    if self.History.count == 0
-                    {
-                        self.lbl_NoFound.isHidden = false
-                    }
-                })
+                self.totalPage = totalpage
+                for result in results!
+                {
+                    self.History.insert(result, at: 0)
+                    DispatchQueue.main.async(execute: {
+                        self.loadingHide()
+                        self.dataTableView.reloadData()
+                        if self.History.count == 0
+                        {
+                            self.lbl_NoFound.isHidden = false
+                        }
+                    })
+
+                }
                 
             }
             else
                 
             {
                 print("\nERROR:---->",mess!)
+                DispatchQueue.main.async(execute: {
+                    self.loadingHide()
+                    self.dataTableView.reloadData()
+                    
+                })
                 
             }
             
         }
+        
     }
     
     
@@ -70,12 +85,9 @@ extension AssessmentHistoryVC: UITableViewDataSource,UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Examinee_HistoryCell
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
-        let date = dateFormatter.date(from: History[indexPath.row].creationDate)
-        dateFormatter.dateFormat = "yy.MM.dd"
         
-        cell.lbl_date.text = dateFormatter.string(from: date!)
+        
+        cell.lbl_date.text = convertDay(DateString: History[indexPath.row].creationDate)
         cell.lbl_ExamID.text = History[indexPath.row].exam
         cell.lbl_Point.text = History[indexPath.row].score
         
@@ -84,4 +96,36 @@ extension AssessmentHistoryVC: UITableViewDataSource,UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 30
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        let lastItem = History.count - 2
+        if indexPath.row == lastItem && currentpage < totalPage + 1
+        {
+            currentpage = currentpage + 1
+            loadmore(page: currentpage)
+            print(currentpage)
+        }
+        
+        print("No loadmore",currentpage,totalPage)
+    }
+    
+    func loadmore(page:Int)
+    {
+        AssesmentHistory.getUserHistory(withToken: token!, userID: userID, page: page) { (status, data, results, totolPage) in
+            
+            if results != nil
+            {
+                for item in results!
+                {
+                    self.History.insert(item, at: 0)
+                    DispatchQueue.main.async(execute: {
+                        self.dataTableView.reloadData()
+                    })
+                }
+            }
+            
+        }
+    }
+    
 }

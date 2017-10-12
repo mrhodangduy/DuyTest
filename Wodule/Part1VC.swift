@@ -51,6 +51,7 @@ class Part1VC: UIViewController {
         circleTime.circleColor = .white
         circleTime.delegate = self
         recordingMess.isHidden = true
+        nextBtn.isHidden = true
 
         
         image_Question.isHidden = true

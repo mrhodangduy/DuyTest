@@ -36,9 +36,9 @@ extension UIViewController
         {
             print("File found and ready to upload")
             print(self.listFilesFromDocumentsFolder()!)
-            print(url.appendingPathComponent("Recordedby-\(userID)-\(examID)").appendingPathExtension("m4a"))
+            print(url.appendingPathComponent("Recordedby-\(userID)-forexam-\(examID)").appendingPathExtension("m4a"))
             
-            let audioURL = url.appendingPathComponent("Recordedby-\(userID)-\(examID)").appendingPathExtension("m4a")
+            let audioURL = url.appendingPathComponent("Recordedby-\(userID)-forexam-\(examID)").appendingPathExtension("m4a")
             
             let data: Data?
             do
@@ -50,11 +50,11 @@ extension UIViewController
                 
                 if status == true
                 {
-                    print("UPLOAD DONE")
+                    print("UPLOAD DONE\n",result!)
                 }
                 else
                 {
-                    print(result!)
+                    print(result as Any)
                 }
             }            
         }
@@ -70,7 +70,7 @@ extension UIViewController
     func StarRecording(userID: Int, examID: Int, result: (_ audioURL: NSURL?) -> Void)
     {
         
-        AudioRecorderManager.shared.recored(fileName: "Recordedby-\(userID)-\(examID)") { (status:Bool, audioURL:NSURL?) in
+        AudioRecorderManager.shared.recored(fileName: "Recordedby-\(userID)-forexam-\(examID)") { (status:Bool, audioURL:NSURL?) in
             
             if status == true
             {
@@ -98,12 +98,8 @@ extension UIViewController
         {
             let data = try? Data(contentsOf: audioURL! as URL)
             
-            print(data!)
-        }
-        catch
-        {
-            
-        }
+            print("DATA AUDIO SIZE:----->",data as Any)
+        }        
         
     }
     
@@ -242,6 +238,15 @@ extension UIViewController
             return "\(ageCompoment.year!)"
             
         }
+    }
+    
+    func convertDay(DateString: String) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        let date = dateFormatter.date(from: DateString)!
+        dateFormatter.dateFormat = "yy.MM.dd"
+        return dateFormatter.string(from: date)
     }
 
 

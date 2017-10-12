@@ -83,13 +83,7 @@ extension Assessor_HistoryVC: UITableViewDataSource,UITableViewDelegate
         
         cell.lbl_ExamID.text = item["exam"] as? String
         cell.lbl_Score.text = item["score"] as? String
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
-        let date = dateFormatter.date(from: item["creationDate"] as! String)
-        dateFormatter.dateFormat = "yy.MM.dd"
-        
-        cell.lbl_Date.text = dateFormatter.string(from: date!)
+        cell.lbl_Date.text = convertDay(DateString: item["creationDate"] as! String)
         
         return cell
     }

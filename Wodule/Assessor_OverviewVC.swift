@@ -14,10 +14,7 @@ class Assessor_OverviewVC: UIViewController {
     @IBOutlet var dataTableView: UITableView!
     var backgroundView:UIView!
     var currentIndex:Int!
-    
-    
-    
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -166,26 +163,26 @@ class Assessor_OverviewVC: UIViewController {
         
         if score_Part1 == nil
         {
-            self.alertMissingText(mess: "Part 1 doesnot assign a score.", textField: nil)
+            self.alertMissingText(mess: "Part 1 must be assigned a score.", textField: nil)
         }
         else if score_Part2 == nil
         {
-            self.alertMissingText(mess: "Part 2 doesnot assign a score.", textField: nil)
+            self.alertMissingText(mess: "Part 2 must be assigned a score.", textField: nil)
         }
         else if score_Part3 == nil
         {
-            self.alertMissingText(mess: "Part 3 doesnot assign a score.", textField: nil)
+            self.alertMissingText(mess: "Part 3 must be assigned a score.", textField: nil)
         }
         else if score_Part4 == nil
         {
-            self.alertMissingText(mess: "Part 4 doesnot assign a score.", textField: nil)
+            self.alertMissingText(mess: "Part 4 must be assigned a score.", textField: nil)
         }
         else
         {
-            removeScoreObject()
             
             let accountingVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "accountingVC") as! Assessor_AccountingVC
             self.navigationController?.pushViewController(accountingVC, animated: true)
+            removeScoreObject()
         }
         
     }
