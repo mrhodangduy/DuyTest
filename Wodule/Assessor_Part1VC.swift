@@ -15,6 +15,9 @@ class Assessor_Part1VC: UIViewController {
     @IBOutlet weak var tv_Comment: RoundTextView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var decreaseBtn: UIButtonX!
+    @IBOutlet weak var increaseBtn: UIButtonX!
+    @IBOutlet weak var img_Question: UIImageViewX!
     
     @IBOutlet var dataTableView: UITableView!
     var backgroundView:UIView!    
@@ -24,7 +27,11 @@ class Assessor_Part1VC: UIViewController {
     var isPlaying:Bool!
     var originalHeight:CGFloat!
     
+    var Exam:NSDictionary!
     
+    var score = 0
+    let token = userDefault.object(forKey: TOKEN_STRING) as? String
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +43,23 @@ class Assessor_Part1VC: UIViewController {
         dataTableView.dataSource = self
         dataTableView.delegate = self
         
+        
+        if ((Exam?["examQuestionaire"] as? String)?.hasPrefix("http://wodule.io/user/"))!
+        {
+            img_Question.isHidden = false
+            img_Question.sd_setImage(with: URL(string: Exam["examQuestionaire"] as! String), placeholderImage: nil, options: [], completed: nil)
+            increaseBtn.isHidden = true
+            decreaseBtn.isHidden = true
+            tv_Content.isHidden = true
+        }
+        else
+        {
+            img_Question.isHidden = true
+            increaseBtn.isHidden = false
+            decreaseBtn.isHidden = false
+            tv_Content.isHidden = false
+            tv_Content.text = Exam["examQuestionaire"] as! String
+        }
 
     }
     
@@ -88,11 +112,34 @@ class Assessor_Part1VC: UIViewController {
         
     }
     
-    @IBAction func nextBtnTap(_ sender: Any) {
+    @IBAction func onClickSubmit(_ sender: Any) {
         
-        let part2VC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "part2VC") as! Assessor_Part2VC
-        self.navigationController?.pushViewController(part2VC, animated: true)
+        if score == 0 || tv_Content.text.trimmingCharacters(in: .whitespacesAndNewlines).characters.count == 0
+        {
+            self.alertMissingText(mess: "Score and Comment is required.", textField: nil)
+        }
+        else
+        {
+            ExamRecord.postGrade(withToken: token!, identifier: Exam["identifier"] as! Int, grade: score, comment: tv_Content.text, completion: { (status:Bool?, code:Int?, result:NSDictionary?) in
+                
+                if code == 200 && status!
+                {
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "post grade"), object: self)
+                    self.navigationController?.popViewController(animated: true)
+                    
+                    print(result!)
+                }
+                
+                else
+                {
+                    self.alertMissingText(mess: "Failed to grade exam.", textField: nil)
+                }
+            })
+        }
+        
     }
+    
+    
     
     @IBAction func playAudioTap(_ sender: UIButton) {
         
@@ -167,6 +214,9 @@ extension Assessor_Part1VC:UITableViewDataSource, UITableViewDelegate
         tableView.deselectRow(at: indexPath, animated: true)
         scoreBtn.setTitle("\(indexPath.row + 1)", for: .normal)
         userDefault.set(indexPath.row + 1, forKey: SCORE_PART1)
+        
+        score = indexPath.row + 1
+        
         handleCloseView()
     }
 }

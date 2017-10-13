@@ -42,6 +42,7 @@ class Assessor_HistoryVC: UIViewController {
                     self.AllRecord = result!
                     self.totalPage = totalPage
                     DispatchQueue.main.async(execute: {
+                        self.AllRecord = self.AllRecord.filter { $0["score"] as! Int == 0 }
                         self.dataTableView.reloadData()
                         self.loadingHide()
                     })
@@ -61,6 +62,42 @@ class Assessor_HistoryVC: UIViewController {
             })
         }
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.loadNewData), name: NSNotification.Name(rawValue: "post grade"), object: nil)
+        
+    }
+    
+    func loadNewData()
+    {
+        loadingShow()
+        DispatchQueue.global(qos: .default).async {
+            
+            ExamRecord.getAllRecord(page: self.currentpage, completion: { (result: [NSDictionary]?, totalPage: Int?) in
+                
+                if result != nil
+                {
+                    self.AllRecord = result!
+                    self.totalPage = totalPage
+                    DispatchQueue.main.async(execute: {
+                        self.AllRecord = self.AllRecord.filter { $0["score"] as! Int == 0 }
+                        self.dataTableView.reloadData()
+                        self.loadingHide()
+                    })
+                    
+                }
+                else
+                {
+                    self.lbl_NoFound.text = "No Record Found"
+                    self.lbl_NoFound.isHidden = false
+                    DispatchQueue.main.async(execute: {
+                        self.dataTableView.reloadData()
+                        self.loadingHide()
+                    })
+                }
+                
+                
+            })
+        }
+
     }
     
     
@@ -82,7 +119,7 @@ extension Assessor_HistoryVC: UITableViewDataSource,UITableViewDelegate
         let item = AllRecord[indexPath.row]
         
         cell.lbl_ExamID.text = item["exam"] as? String
-        cell.lbl_Score.text = item["score"] as? String
+        cell.lbl_Score.text = "\(item["score"] as! Int)"
         cell.lbl_Date.text = convertDay(DateString: item["creationDate"] as! String)
         
         return cell
@@ -90,6 +127,16 @@ extension Assessor_HistoryVC: UITableViewDataSource,UITableViewDelegate
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 30
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let part1VC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "part1VC") as! Assessor_Part1VC
+        part1VC.Exam = AllRecord[indexPath.row]
+        
+        self.navigationController?.pushViewController(part1VC, animated: true)
+
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -113,15 +160,21 @@ extension Assessor_HistoryVC: UITableViewDataSource,UITableViewDelegate
             {
                 for item in result!
                 {
-                    self.AllRecord.append(item)
-                    DispatchQueue.main.async(execute: {
-                        self.dataTableView.reloadData()
-                    })
+                    if (item["score"] as! Int) == 0
+                    {
+                        self.AllRecord.append(item)
+                        DispatchQueue.main.async(execute: {
+                            self.dataTableView.reloadData()
+                        })
+                    }
+                    
                 }
             }
         })
         
     }
+    
+    
 
     
 }

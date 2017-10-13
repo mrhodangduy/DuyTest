@@ -74,6 +74,7 @@ let ADDRESS3_STRING = "address3"
 let ETHNIC_STRING = "ethnicity"
 let RELIGION_STRING = "religion"
 let LASTNAMEFIRST_STRING = "ln_first"
+let TOKENRESET_STRING = "tokenreset"
 
 let SCORE_PART1 = "score_part1"
 let SCORE_PART2 = "score_part2"

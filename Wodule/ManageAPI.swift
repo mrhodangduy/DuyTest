@@ -238,6 +238,43 @@ struct LoginWithSocial
             
         }
     }
+    
+    
+    static func ResetPassword(email: String, completion: @escaping (Bool?, NSDictionary?)->())
+    {
+        let url = URL(string: "http://wodule.io/api/password/email")
+        
+        let para:Parameters = ["email": email]
+        let header: HTTPHeaders = ["Accept": "application/json"]
+        
+        Alamofire.request(url!, method: .post, parameters: para, encoding: URLEncoding.default, headers: header).responseJSON { (response) in
+            
+            let json = response.result.value as? NSDictionary
+            let code = response.response?.statusCode
+            
+            if response.result.isSuccess
+            {
+                if code == 200
+                {
+                    guard let data = json?["data"] as? NSDictionary, let token = data["token"] as? String else {return}
+                    
+                    userDefault.set(token, forKey: TOKENRESET_STRING)
+                    userDefault.synchronize()
+                    
+                    completion(true, json)
+                }
+                else
+                {
+                    completion(false, json)
+                }
+            }
+            else
+            {
+                completion(false, json)
+            }
+        }
+    }
+    
 }
 
 struct UserInfoAPI

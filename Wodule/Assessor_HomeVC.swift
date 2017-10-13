@@ -171,10 +171,6 @@ class Assessor_HomeVC: UIViewController {
     
     @IBAction func assessmentHistoryTap(_ sender: Any) {
         
-        let historyVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "historyVC") as! Assessor_HistoryVC
-        historyVC.userID = (userInfomation["id"] as? Int)!
-        
-        self.navigationController?.pushViewController(historyVC, animated: true)
         
     }
     
@@ -193,8 +189,10 @@ class Assessor_HomeVC: UIViewController {
     }
     @IBAction func startAssessmentTap(_ sender: Any) {
         
-        let part1VC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "part1VC") as! Assessor_Part1VC
-        self.navigationController?.pushViewController(part1VC, animated: true)
+        let allReocrdVC = UIStoryboard(name: ASSESSOR_STORYBOARD, bundle: nil).instantiateViewController(withIdentifier: "allrecordVC") as! Assessor_HistoryVC
+        
+        self.navigationController?.pushViewController(allReocrdVC, animated: true)
+
         
     }
     

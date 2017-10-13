@@ -116,11 +116,12 @@ struct ExamRecord
         }
     }
     
-    static func postGrade(withToken token: String, identifier:Int, grade: Int, completion: @escaping (Bool?, Int?, NSDictionary?) -> ())
+    static func postGrade(withToken token: String, identifier:Int, grade: Int,comment:String, completion: @escaping (Bool?, Int?, NSDictionary?) -> ())
     {
         let url = URL(string: APIURL.baseURL + "/records/" + "\(identifier)" + "/grades")
         let httpHeader:HTTPHeaders = ["Authorization":"Bearer \(token)"]
-        let para: Parameters = ["grade": "\(grade)"]
+        let para: Parameters = ["grade": "\(grade)",
+                                "comment": comment]
         
         Alamofire.request(url!, method: .post, parameters: para, encoding: URLEncoding.default, headers: httpHeader).responseJSON { (response) in
             
@@ -141,7 +142,7 @@ struct ExamRecord
             }
             else
             {
-                completion(true, code, json)
+                completion(false, code, json)
             }
             
         }

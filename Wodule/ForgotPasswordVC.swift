@@ -19,7 +19,7 @@ class ForgotPasswordVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        showDatePicker()
+//        showDatePicker()
         
         // Do any additional setup after loading the view.
     }
@@ -61,15 +61,12 @@ class ForgotPasswordVC: UIViewController {
    
     @IBAction func submitBtnTap(_ sender: Any) {
         
-        let checkey = checkValidateTextField(tf1: tf_Username, tf2: tf_Email, tf3: tf_Birthday, tf4: nil, tf5: nil, tf6: nil)
+        let checkey = checkValidateTextField(tf1: tf_Username, tf2: nil, tf3: nil, tf4: nil, tf5: nil, tf6: nil)
         
         switch checkey {
         case 1:
-            self.alertMissingText(mess: "Username is required", textField: tf_Username)
-        case 2:
-            self.alertMissingText(mess: "Email is required", textField: tf_Email)
-        case 3:
-            self.alertMissingText(mess: "Birthday is required", textField: nil)
+            self.alertMissingText(mess: "Email is required", textField: tf_Username)
+        
         default:
             self.dismiss(animated: true, completion: nil)
 
