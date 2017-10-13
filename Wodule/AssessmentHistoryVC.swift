@@ -23,6 +23,8 @@ class AssessmentHistoryVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        super.viewDidLoad()
+        
         lbl_NoFound.isHidden = true
         lbl_NoFound.text = "No Assessment Found"
         
@@ -36,21 +38,30 @@ class AssessmentHistoryVC: UIViewController {
             
             if status!
             {
-                print("\n\nHISTORY LIST:--->\n",results!)
-                self.totalPage = totalpage
-                for result in results!
+                if results?.count != 0
                 {
-                    self.History.insert(result, at: 0)
+                    print("\n\nHISTORY LIST:--->\n",results!)
+                    self.totalPage = totalpage
+                    for result in results!
+                    {
+                        self.History.append(result)
+                        DispatchQueue.main.async(execute: {
+                            self.loadingHide()
+                            self.dataTableView.reloadData()
+                            
+                        })
+                        
+                    }
+                }
+                else
+                {
                     DispatchQueue.main.async(execute: {
                         self.loadingHide()
                         self.dataTableView.reloadData()
-                        if self.History.count == 0
-                        {
-                            self.lbl_NoFound.isHidden = false
-                        }
+                        self.lbl_NoFound.isHidden = false
                     })
-
                 }
+                
                 
             }
             else
@@ -66,6 +77,7 @@ class AssessmentHistoryVC: UIViewController {
             }
             
         }
+        
         
     }
     
@@ -89,12 +101,27 @@ extension AssessmentHistoryVC: UITableViewDataSource,UITableViewDelegate
         
         cell.lbl_date.text = convertDay(DateString: History[indexPath.row].creationDate)
         cell.lbl_ExamID.text = History[indexPath.row].exam
-        cell.lbl_Point.text = History[indexPath.row].score
+        
+        if History[indexPath.row].score == 0
+        {
+            cell.lbl_Point.text = "-"
+        }
+        else
+        {
+            cell.lbl_Point.text = "\(History[indexPath.row].score)"
+
+        }
         
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 30
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        print("HISTORY\n----->",History[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -118,7 +145,7 @@ extension AssessmentHistoryVC: UITableViewDataSource,UITableViewDelegate
             {
                 for item in results!
                 {
-                    self.History.insert(item, at: 0)
+                    self.History.append(item)
                     DispatchQueue.main.async(execute: {
                         self.dataTableView.reloadData()
                     })

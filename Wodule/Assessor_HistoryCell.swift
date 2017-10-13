@@ -13,6 +13,7 @@ class Assessor_HistoryCell: UITableViewCell {
     @IBOutlet weak var lbl_Date: UILabel!
     @IBOutlet weak var lbl_ExamID: UILabel!
     @IBOutlet weak var lbl_Score: UILabel!
+    @IBOutlet weak var lbl_examinerrID: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

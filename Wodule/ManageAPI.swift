@@ -754,7 +754,8 @@ struct AssesmentHistory
     let identifier: Int
     let audio: String
     let exam: String
-    let score: String
+    let score: Int
+    let comment:String
     let examCategory: String
     let examDetails: String
     let examQuestionaire: String
@@ -773,7 +774,8 @@ struct AssesmentHistory
         guard let identifier = json["identifier"] as? Int else { throw error.missing("missing value") }
         guard let audio = json["audio"] as? String else { throw error.missing("missing value") }
         guard let exam = json["exam"] as? String else { throw error.missing("missing value") }
-        guard let score = json["score"] as? String else { throw error.missing("missing value") }
+        guard let score = json["score"] as? Int else { throw error.missing("missing value") }
+        guard let comment = json["comment"] as? String else { throw error.missing("missing value") }
         guard let examCategory = json["examCategory"] as? String else { throw error.missing("missing value") }
         guard let examDetails = json["examDetails"] as? String else { throw error.missing("missing value") }
         guard let examQuestionaire = json["examQuestionaire"] as? String else { throw error.missing("missing value") }
@@ -786,6 +788,7 @@ struct AssesmentHistory
         self.audio = audio
         self.exam = exam
         self.score = score
+        self.comment = comment
         self.examCategory = examCategory
         self.examDetails = examDetails
         self.examQuestionaire = examQuestionaire
@@ -808,18 +811,29 @@ struct AssesmentHistory
             if response.response?.statusCode == 200
             {
                 let json = response.result.value as? [String:AnyObject]
+                print("JSON",json)
                 if let data = json?["data"] as? [[String:AnyObject]]
                 {
-                    guard let meta = json?["meta"] as? NSDictionary, let pagination = meta["pagination"] as? NSDictionary, let total_pages = pagination["total_pages"] as? Int else {return}
-                    
-                    for item in data
+                    print("DATA",data)
+                    if data.count != 0
                     {
-                        if let history = try? AssesmentHistory(json: item)
+                        guard let meta = json?["meta"] as? NSDictionary, let pagination = meta["pagination"] as? NSDictionary, let total_pages = pagination["total_pages"] as? Int else {return}
+                        
+                        for item in data
                         {
-                            result.append(history)
+                            if let history = try? AssesmentHistory(json: item)
+                            {
+                                result.append(history)
+                            }
                         }
+                        completion(true,nil, result, total_pages)
                     }
-                    completion(true,nil, result, total_pages)
+                    else
+                    {
+                        result = []
+                        completion(true,nil, result, 1)
+                    }
+                    
                 }
                 else
                 {

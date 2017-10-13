@@ -68,6 +68,7 @@ class Assessor_HistoryVC: UIViewController {
     
     func loadNewData()
     {
+        currentpage = 1
         loadingShow()
         DispatchQueue.global(qos: .default).async {
             
@@ -119,8 +120,13 @@ extension Assessor_HistoryVC: UITableViewDataSource,UITableViewDelegate
         let item = AllRecord[indexPath.row]
         
         cell.lbl_ExamID.text = item["exam"] as? String
-        cell.lbl_Score.text = "\(item["score"] as! Int)"
+//        cell.lbl_Score.text = "\(item["score"] as! Int)"
+        cell.lbl_Score.text = "-"
         cell.lbl_Date.text = convertDay(DateString: item["creationDate"] as! String)
+        cell.lbl_examinerrID.text = "\(item["examinee"] as! Int)"
+        
+        
+        
         
         return cell
     }

@@ -43,10 +43,13 @@ class Assessor_Part1VC: UIViewController {
         dataTableView.dataSource = self
         dataTableView.delegate = self
         
+        img_Question.contentMode = .scaleAspectFit
+        
         
         if ((Exam?["examQuestionaire"] as? String)?.hasPrefix("http://wodule.io/user/"))!
         {
             img_Question.isHidden = false
+            
             img_Question.sd_setImage(with: URL(string: Exam["examQuestionaire"] as! String), placeholderImage: nil, options: [], completed: nil)
             increaseBtn.isHidden = true
             decreaseBtn.isHidden = true
@@ -114,13 +117,13 @@ class Assessor_Part1VC: UIViewController {
     
     @IBAction func onClickSubmit(_ sender: Any) {
         
-        if score == 0 || tv_Content.text.trimmingCharacters(in: .whitespacesAndNewlines).characters.count == 0
+        if score == 0 || tv_Comment.text.trimmingCharacters(in: .whitespacesAndNewlines).characters.count == 0
         {
             self.alertMissingText(mess: "Score and Comment is required.", textField: nil)
         }
         else
         {
-            ExamRecord.postGrade(withToken: token!, identifier: Exam["identifier"] as! Int, grade: score, comment: tv_Content.text, completion: { (status:Bool?, code:Int?, result:NSDictionary?) in
+            ExamRecord.postGrade(withToken: token!, identifier: Exam["identifier"] as! Int, grade: score, comment: tv_Comment.text, completion: { (status:Bool?, code:Int?, result:NSDictionary?) in
                 
                 if code == 200 && status!
                 {
